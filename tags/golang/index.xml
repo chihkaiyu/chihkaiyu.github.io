@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Golang on No Idiots Allowed Here</title>
+    <link>https://chihkaiyu.gitlab.io/tags/golang/</link>
+    <description>Recent content in Golang on No Idiots Allowed Here</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-TW</language>
+    <lastBuildDate>Tue, 02 Jul 2019 00:03:00 +0800</lastBuildDate>
+    
+	<atom:link href="https://chihkaiyu.gitlab.io/tags/golang/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Golang Memory Management (based on 1.12.5)</title>
+      <link>https://chihkaiyu.gitlab.io/post/golang-memory-management/</link>
+      <pubDate>Tue, 02 Jul 2019 00:03:00 +0800</pubDate>
+      
+      <guid>https://chihkaiyu.gitlab.io/post/golang-memory-management/</guid>
+      <description>Golang Memory Management (based on 1.12.5) 此文是我在看過許多 Golang 記憶體管理的文章後，再搭配 souce code 所整理出來的。有點像是利用 souce code 來驗證我是否理解網路上所搜尋到的文章。
+Golang 基於 TCMalloc (Thread-Caching Malloc) 加以修改，改為適合自己的 allocator。
+TCMalloc 有幾項特點：
+ 盡可能先分配一大塊記憶體，以降低分配及釋放的 overhead 將這塊記憶體切成各種大小的 span，以降低 memory fragmentation 分配特別小的物件時優化，以提升記憶體使用率 Thread 裡有 cache，使用時可以不必 lock 以提升效率  Terminology Golang memory management 裡有許多角色，此段落先簡單介紹各角色功用，下段落會詳細各角色的結構及彼此之間的關係。
+下圖為大致架構圖，可一邊閱讀一邊參閱：
+mheap mheap 在整個 Golang runtime 裡只會存在一個，Golang 所用到的所有記憶體都要來向 mheap 申請。
+而 mheap 自身擁有的記憶體不夠時，會再向 OS 申請，每次申請至少 1MB 的記憶體，減少向 OS 申請的 overhead。
+mheap 在管理記憶體時是以 page 為單位在管理的，這裡的 page 並不是 OS 層級的 page。Golang 的一頁 page 大小為 8k bytes。</description>
+    </item>
+    
+  </channel>
+</rss>
