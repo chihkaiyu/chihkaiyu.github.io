@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Digest on No Idiots Allowed Here</title>
-    <link>https://chihkaiyu.gitlab.io/tags/digest/</link>
+    <link>https://chihkaiyu.github.io/tags/digest/</link>
     <description>Recent content in Digest on No Idiots Allowed Here</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-TW</language>
     <lastBuildDate>Thu, 07 Mar 2019 00:24:00 +0800</lastBuildDate>
     
-	<atom:link href="https://chihkaiyu.gitlab.io/tags/digest/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://chihkaiyu.github.io/tags/digest/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Chapter VI - Big O</title>
-      <link>https://chihkaiyu.gitlab.io/post/chapter-vi-big-o/</link>
+      <link>https://chihkaiyu.github.io/post/chapter-vi-big-o/</link>
       <pubDate>Thu, 07 Mar 2019 00:24:00 +0800</pubDate>
       
-      <guid>https://chihkaiyu.gitlab.io/post/chapter-vi-big-o/</guid>
+      <guid>https://chihkaiyu.github.io/post/chapter-vi-big-o/</guid>
       <description>Chapter VI - Big O Big O, Big Theta, and Big Omega 學術上使用 big O, big theta, big omega 來描述執行速度。然而工程上 (或是面試)，人們常會將 big theta 及 big O 混在一起。工程上的 big O 即是學術上的 big theta。
 例如印出一個 array，在學術上說 O(N^2) 是正確的，但工程上我們會說這是 O(N)。
 本書所有例子都會使用工程上的 big O。
@@ -26,10 +26,10 @@ O (big O) 學術上，big O 用來描述時間的 upper bound。例如印出一�
     
     <item>
       <title>Prometheus Survey</title>
-      <link>https://chihkaiyu.gitlab.io/post/prometheus-survey/</link>
+      <link>https://chihkaiyu.github.io/post/prometheus-survey/</link>
       <pubDate>Tue, 15 Jan 2019 22:16:00 +0800</pubDate>
       
-      <guid>https://chihkaiyu.gitlab.io/post/prometheus-survey/</guid>
+      <guid>https://chihkaiyu.github.io/post/prometheus-survey/</guid>
       <description>Prometheus Survey Architecture Prometheus server 負責蒐集及儲存各 target 的 metrics，也會檢查 alert 規則，觸發後會發 alert 給 alertmanager。
 Target 要被監控的目標，會以網頁方式將 metrics 以固定格式呈現給 prometheus server 抓取。
 Pushgateway: 若有一些 target 不適合以抓取的方式獲得 metrics，例如存活時間很短的 job，prometheus server 還來不及抓就關閉了，則可以將 metrics 推送到 pushgateway，再讓 prometheus server 到 pushgateway 抓取 metrics。
@@ -39,10 +39,10 @@ Concepts Data Model  每一條 time series 由 metric name 及一組 labels 來�
     
     <item>
       <title>Clean Code Digest - Chapter 6 物件及資料結構</title>
-      <link>https://chihkaiyu.gitlab.io/post/clean-code-chapter-6/</link>
+      <link>https://chihkaiyu.github.io/post/clean-code-chapter-6/</link>
       <pubDate>Fri, 19 Oct 2018 01:15:38 +0800</pubDate>
       
-      <guid>https://chihkaiyu.gitlab.io/post/clean-code-chapter-6/</guid>
+      <guid>https://chihkaiyu.github.io/post/clean-code-chapter-6/</guid>
       <description>Chapter 6 物件及資料結構 TL; DR 我認為此章節所想表達的有下列事項： - 抽象化：資料需要抽象化隱藏其實作過程。在封裝起來後要依然能操作資料的本質。 - 互補：以資料結構為本位的程式容易增加新函式，但不易增加新的資料結構；以物件為本位的程式容易增加新類別，但不易增加新函式。
 資料抽象化  類別提供了一個抽象介面，讓使用者在不需要知道實現過程的狀態下，還能夠操縱資料的本質 嚴謹一點的最好作法是，想辦法找到最能詮釋「資料抽象概念」的方式。 最糟糕的作法，則是天真快樂地加上讀取函式及設定函式而已。
  作者以座標點及交通工具剩餘油量作為例子： 座標點：
@@ -53,10 +53,10 @@ Concepts Data Model  每一條 time series 由 metric name 及一組 labels 來�
     
     <item>
       <title>Clean Code Digest - Chapter 5 編排</title>
-      <link>https://chihkaiyu.gitlab.io/post/clean-code-chapter-5/</link>
+      <link>https://chihkaiyu.github.io/post/clean-code-chapter-5/</link>
       <pubDate>Thu, 11 Oct 2018 00:49:10 +0800</pubDate>
       
-      <guid>https://chihkaiyu.gitlab.io/post/clean-code-chapter-5/</guid>
+      <guid>https://chihkaiyu.github.io/post/clean-code-chapter-5/</guid>
       <description>Chapter 5 編排 TL; DR 我認為此章節所想表達的有下列事項： - 編排的目的：作者認為編排會影響可讀性，而可讀性會不斷對日後的改變產生影響。甚至整本書其實都是在討論這件事 - 垂直：程式碼由上而下閱讀，應該像報紙一樣，由概要、概念、細節逐一深入。而程式碼之間的垂直距離以宣告的地方、使用的地方、本質來決定 - 水平：水平的空白間隔用來區分事情，例如 = 前後加入空白使其更突出，或是用來強調運算子的優先權。另一個用途是縮排，縮排決定了視野，而視野讓程式設計師可以快速替程式區塊作分類
 編排的目的  程式編排是很重要的。 程式碼的可讀性，將會對以後每個可能的改變，產生深遠的影響。
  這裡提編排是很重要，理由是會影響程式碼可讀性；程式碼可讀性很重要，理由如同前幾章提到的，可讀性會影響該程式碼是否易於修改。 有一派人會主張程式只要能正常運作就好，討論一堆枝微末節的小事根本是浪費時間。但我認為就是要讓程式正常運作，才需要討論這些小事，除非你認為程式碼隨便寫一寫就可以正常運作了。
@@ -71,10 +71,10 @@ func main() { err := initConfig() if err != nil { log.Fatal(err) } err = initDat
     
     <item>
       <title>Clean Code Digest - Chapter 4 註解</title>
-      <link>https://chihkaiyu.gitlab.io/post/clean-code-chapter-4/</link>
+      <link>https://chihkaiyu.github.io/post/clean-code-chapter-4/</link>
       <pubDate>Wed, 10 Oct 2018 14:33:00 +0800</pubDate>
       
-      <guid>https://chihkaiyu.gitlab.io/post/clean-code-chapter-4/</guid>
+      <guid>https://chihkaiyu.github.io/post/clean-code-chapter-4/</guid>
       <description>Chapter 4 註解 TL; DR 我認為此章節所想表達的有下列事項： - 最後一道防線：作者認為註解是最後手段，在寫下註解前，你應該好好的審視程式碼是否能改寫得更好，盡量讓程式碼本身就能表達出足夠的含義 - 好的註解：這些註解都不應該解釋程式碼怎麼運作，而是為什麼要這麼做，或是不這麼做的後果會是什麼 - 壞的註解：可以從 git 得到的資訊就不需要再寫註解了。規定一定要寫下某些註解是很愚蠢的。別使註解干擾或誤導他人。
 Chapter 4 註解  「不要替糟糕的程式碼寫註解－－重寫它」－－Brian W. Kernighan and P.J. Plaugher 適當地使用註解是用來「彌補我們用程式碼表達意圖的失敗」。 一個註解存在越久，事實就越來越偏離當初的程式碼解釋。
  此段落其實在告訴你不要寫註解，作者主要有底下兩個理由： - 寫註解代表你的程式碼不足以表現意圖，你應該修改你的程式碼 - 程式碼總是一直被修改，於是註解與程式碼內容越差越遠，最後註解將會誤導你
@@ -87,10 +87,10 @@ Chapter 4 註解  「不要替糟糕的程式碼寫註解－－重寫它」－�
     
     <item>
       <title>Clean Code Digest - Chapter 3 函式</title>
-      <link>https://chihkaiyu.gitlab.io/post/clean-code-chapter-3/</link>
+      <link>https://chihkaiyu.github.io/post/clean-code-chapter-3/</link>
       <pubDate>Thu, 27 Sep 2018 23:18:56 +0800</pubDate>
       
-      <guid>https://chihkaiyu.gitlab.io/post/clean-code-chapter-3/</guid>
+      <guid>https://chihkaiyu.github.io/post/clean-code-chapter-3/</guid>
       <description>Chapter 3 函式 TL; DR 我認為此章節所想表達的有下列事項： - 簡短：整章其實都圍繞著「簡短」打轉，像是函式只做一件事，且是同一層抽象概念的事，一直到不要重複自己都是在想辦法盡量讓函式 (程式碼) 簡短。 - 故事：一份程式碼是在描述系統的故事，函式是動詞，類別是名詞，函式訴說著他對系統裡的東西做了什麼事。良好的命名及漂亮的結構最後整潔的結合在一起，便能順暢的說出系統的故事。
 簡短！  關於函式的首要準則就是要簡短。第二項準則就是要比第一項更簡短。 每個函式都一清二楚，透露出本身的意圖。每個函式帶領著你至下個函式，這就是經式該有的簡短。
  這段直接破題告讓你函式就是要短，而且是毫無研究上的支持，完全是作者自己的經驗談。我們也知道看一個長度 50 行的函式與 500 行的函式在閱讀起來是截然不同的感受。我在拆函式的習慣是滿隨性的，我會將主要流程分為幾個步驟，將各個步驟都寫成一個函式。 這段另外提到了區塊 (blocks) 及縮排 (indenting)，他提到條件敘述應該只有一行，且那行便是函式呼叫。這不僅維持封閉式的簡短，若函式名稱取得好還能用來描述意圖。而這也意味著函式不應該大到包含巢狀結構，因此函式裡的縮排不應該大過一或兩層。但這件事我認為在 Python 裡非常難做到，尤其 Python 又是以縮排作為 blocks 的區別。
@@ -102,10 +102,10 @@ func updateAllUsers() error { // get users from db stmt, err := db.</description
     
     <item>
       <title>Clean Code Digest - Chapter 2 有意義的命名</title>
-      <link>https://chihkaiyu.gitlab.io/post/clean-code-chapter-2/</link>
+      <link>https://chihkaiyu.github.io/post/clean-code-chapter-2/</link>
       <pubDate>Wed, 19 Sep 2018 22:51:00 +0800</pubDate>
       
-      <guid>https://chihkaiyu.gitlab.io/post/clean-code-chapter-2/</guid>
+      <guid>https://chihkaiyu.github.io/post/clean-code-chapter-2/</guid>
       <description>Chapter 2 有意義的命名 TL; DR 我認為此章節所想表達的有下列事項： - 意圖：取一個好名稱便能得知此類別、物件、函式、變數的含義，或是它想要做什麼事、被做什麼事 - 一致性：永遠使用同一個字詞來表達相同的抽象概念，同樣語意使用不同字詞會使人誤會 - 區別性：與前一項相反，不相同的東西就讓他能輕易被分別出來 - 社交：使其他人輕鬆維護、開發同一份程式碼，包含面對面的討論
 讓名稱代表意圖 - 使之名副其實  變數、函式或類別的名稱，要能解決大部份的問題。如果一個名稱還需要註解的輔助，那麼這個名稱就不具備展現意圖的能力。
  Naming is hard，對於母語不是英文的亞洲人來說，要選一個合適的詞彙並貼切你想表達的意圖就更難了。以往我會盡量避免使用過長的命名，但這本書似乎是鼓勵你這麼做，比起模糊不清，一眼就能看出意圖是更重要的事。 此書舉了一個例子 (我改寫為 Golang)：
