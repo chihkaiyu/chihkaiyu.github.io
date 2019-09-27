@@ -224,9 +224,9 @@ Golang 基於 TCMalloc (Thread-Caching Malloc) 加以修改，改為適合自己
 TCMalloc 有幾項特點：
  盡可能先分配一大塊記憶體，以降低分配及釋放的 overhead 將這塊記憶體切成各種大小的 span，以降低 memory fragmentation 分配特別小的物件時優化，以提升記憶體使用率 Thread 裡有 cache，使用時可以不必 lock 以提升效率  Terminology Golang memory management 裡有許多角色，此段落先簡單介紹各角色功用，下段落會詳細各角色的結構及彼此之間的關係。
 下圖為大致架構圖，可一邊閱讀一邊參閱：
-mheap mheap 在整個 Golang runtime 裡只會存在一個，Golang 所用到的所有記憶體都要來向 mheap 申請。
-而 mheap 自身擁有的記憶體不夠時，會再向 OS 申請，每次申請至少 1MB 的記憶體，減少向 OS 申請的 overhead。
-mheap 在管理記憶體時是以 page 為單位在管理的，這裡的 page 並不是 OS 層級的 page。Golang 的一頁 page 大小為 8k bytes。 <a class="read-more" href="https://chihkaiyu.github.io/post/golang-memory-management/">&raquo;</a></p>
+mspan mspan 是 Golang 記憶體管理最小單位，由數頁 page 所組成，每一個 mspan 都會對應到一個 span class，用來決定該如何切割該 mspan 裡的 page。其 mspan 是 double-linked list。
+page 經過切割後變為 object，此 object 才是真正分配記憶體的最小單位。
+mcache 每個 P (Golang scheduler 的 logic processor)，會綁定一個 mcache，由於同一時間只會有一個 G (goroutine) 在 P 上跑，所以在存取時並不需要 lock。 <a class="read-more" href="https://chihkaiyu.github.io/post/golang-memory-management/">&raquo;</a></p>
         
     </section>
     <footer class="post-meta">

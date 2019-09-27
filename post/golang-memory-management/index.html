@@ -112,7 +112,7 @@ Golang 基於 TCMalloc (Thread-Cac" />
     },
     "headline": Golang Memory Management (based on 1.12.5),
     "name": Golang Memory Management (based on 1.12.5),
-    "wordCount": 4566,
+    "wordCount": 4601,
     "timeRequired": "PT22M",
     "inLanguage": {
       "@type": "Language",
@@ -265,6 +265,23 @@ TCMalloc 有幾項特點：</p>
 
 <p><img src="https://chihkaiyu.github.io/content/images/2019/07/golang_memory_architecture.png" alt="" /></p>
 
+<h2 id="mspan">mspan</h2>
+
+<p><code>mspan</code> 是 Golang 記憶體管理最小單位，由數頁 page 所組成，每一個 <code>mspan</code> 都會對應到一個 span class，用來決定該如何切割該 <code>mspan</code> 裡的 page。其 <code>mspan</code> 是 double-linked list。<br />
+page 經過切割後變為 object，此 object 才是真正分配記憶體的最小單位。</p>
+
+<h2 id="mcache">mcache</h2>
+
+<p>每個 P (Golang scheduler 的 logic processor)，會綁定一個 <code>mcache</code>，由於同一時間只會有一個 G (goroutine) 在 P 上跑，所以在存取時並不需要 lock。<br />
+當 <code>mcache</code> 上的 <code>mspan</code> 已經沒有空間了，便會向 <code>mcentral</code> 申請一個有空間的 <code>mspan</code> 來替換舊的 <code>mspan</code>。</p>
+
+<h2 id="mcentral">mcentral</h2>
+
+<p><code>mcentral</code> 用來管理 <code>mspan</code>，一個 <code>mcentral</code> 負責一種 span class 的 <code>mspan</code>。<br />
+當 <code>mcentral</code> 無 <code>mspan</code> 可用時，便會向 <code>mheap</code> 申請新的 <code>mspan</code> 加入。
+目前總共有 64 種 sizes，又根據是否存放 pointer 分為 scan 及 noscan 兩種。所以 <code>mheap</code> 裡總共有 134 (67*2) 個 <code>mcentral</code>。<br />
+這是為了加速 GC 的 mark 階段，在 non-scan 裡，一定不會有 pointer，所以不需一個一個往下檢查。</p>
+
 <h2 id="mheap">mheap</h2>
 
 <p><code>mheap</code> 在整個 Golang runtime 裡只會存在一個，Golang 所用到的所有記憶體都要來向 <code>mheap</code> 申請。<br />
@@ -280,27 +297,10 @@ TCMalloc 有幾項特點：</p>
 <p>每一個 <code>arena</code> 都會有一相對應的 <code>heapArena</code>，這裡存放了一些 <code>arena</code> 的 metadata，像是 <code>bitmap</code> 或是 <code>spans</code>。<br />
 在 <code>mheap</code> 裡的 <code>heapArena</code> 是一個二維 array，在大多數架構下，第一層通常只有一個 element。</p>
 
-<h2 id="mcentral">mcentral</h2>
-
-<p><code>mcentral</code> 用來管理 <code>mspan</code>，一個 <code>mcentral</code> 負責一種 span class 的 <code>mspan</code>。<br />
-當 <code>mcentral</code> 無 <code>mspan</code> 可用時，便會向 <code>mheap</code> 申請新的 <code>mspan</code> 加入。
-目前總共有 64 種 sizes，又根據是否存放 pointer 分為 scan 及 noscan 兩種。所以 <code>mheap</code> 裡總共有 134 (67*2) 個 <code>mcentral</code>。<br />
-這是為了加速 GC 的 mark 階段，在 non-scan 裡，一定不會有 pointer，所以不需一個一個往下檢查。</p>
-
-<h2 id="mcache">mcache</h2>
-
-<p>每個 P (Golang scheduler 的 logic processor)，會綁定一個 <code>mcache</code>，由於同一時間只會有一個 G (goroutine) 在 P 上跑，所以在存取時並不需要 lock。<br />
-當 <code>mcache</code> 上的 <code>mspan</code> 已經沒有空間了，便會向 <code>mcentral</code> 申請一個有空間的 <code>mspan</code> 來替換舊的 <code>mspan</code>。</p>
-
-<h2 id="mspan">mspan</h2>
-
-<p><code>mspan</code> 是 Golang 記憶體管理最小單位，由數頁 page 所組成，每一個 <code>mspan</code> 都會對應到一個 span class，用來決定該如何切割該 <code>mspan</code> 裡的 page。其 <code>mspan</code> 是 double-linked list。<br />
-page 經過切割後變為 object，此 object 才是真正分配記憶體的最小單位。</p>
-
 <h2 id="span-class">span class</h2>
 
 <p>目前共有 67 種 size classes，每種 class 訂出了其 span 多大、其 object 多大。<br />
-而每一種 size 又會分為 scan 及 noscan 兩種，所以共有 137 種 span class。<br />
+而每一種 size 又會分為 scan 及 noscan 兩種，所以共有 134 種 span class。<br />
 每個 <code>mcentral</code> 負責一種 span class，其包含的所有 <code>mspan</code> 將會按照其規格劃分。</p>
 
 <h1 id="component">Component</h1>
@@ -356,6 +356,90 @@ arena 根據不同 CPU 架構、OS 會有所不同，常見的 linux 64-bit 目�
 </span><span style="color:#75715e"></span>	<span style="color:#a6e22e">needzero</span>    <span style="color:#66d9ef">uint8</span>      <span style="color:#75715e">// 分配前是否需要 zeroed
 </span><span style="color:#75715e"></span>	<span style="color:#a6e22e">elemsize</span>    <span style="color:#66d9ef">uintptr</span>    <span style="color:#75715e">// 此 span 一個 object 的大小 computed from sizeclass or from npages
 </span><span style="color:#75715e"></span>}</code></pre></div></p>
+
+<h2 id="size-class">size class</h2>
+
+<p><a href="https://github.com/golang/go/blob/go1.12.5/src/runtime/sizeclasses.go#L6">Source code</a></p>
+
+<p>下表為 Golang 所有的 size class，下列解釋各 column 意義：</p>
+
+<ul>
+<li>class：此 class 的編號，分類時皆使用此編號作為 index</li>
+<li>bytes/obj：此 class 一個 object 的大小</li>
+<li>bytes/span：此 class 一個 mspan 的大小</li>
+<li>objects：此 class 的 object 數量</li>
+<li>tail waste：此 class 因無法完整分配所造成的浪費，例如 class 4，浪費了 32 bytes = 8192 - 48*170</li>
+<li>max waste：此 class 最多可能浪費的空間，計算公式為：((object size - (前一級的 object size + 1)) * object 數量 + tail waste) / mspan size，例如 class 4 為 31.52% = ((48 - (32 + 1)) * 170 + 32) / 8192</li>
+</ul>
+
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">// sizeclasses.go
+</span><span style="color:#75715e">// class  bytes/obj  bytes/span  objects  tail waste  max waste
+</span><span style="color:#75715e">//     1          8        8192     1024           0     87.50%
+</span><span style="color:#75715e">//     2         16        8192      512           0     43.75%
+</span><span style="color:#75715e">//     3         32        8192      256           0     46.88%
+</span><span style="color:#75715e">//     4         48        8192      170          32     31.52%
+</span><span style="color:#75715e">//     5         64        8192      128           0     23.44%
+</span><span style="color:#75715e">//     6         80        8192      102          32     19.07%
+</span><span style="color:#75715e">//     7         96        8192       85          32     15.95%
+</span><span style="color:#75715e">//     8        112        8192       73          16     13.56%
+</span><span style="color:#75715e">//     9        128        8192       64           0     11.72%
+</span><span style="color:#75715e">//    10        144        8192       56         128     11.82%
+</span><span style="color:#75715e">//    11        160        8192       51          32      9.73%
+</span><span style="color:#75715e">//    12        176        8192       46          96      9.59%
+</span><span style="color:#75715e">//    13        192        8192       42         128      9.25%
+</span><span style="color:#75715e">//    14        208        8192       39          80      8.12%
+</span><span style="color:#75715e">//    15        224        8192       36         128      8.15%
+</span><span style="color:#75715e">//    16        240        8192       34          32      6.62%
+</span><span style="color:#75715e">//    17        256        8192       32           0      5.86%
+</span><span style="color:#75715e">//    18        288        8192       28         128     12.16%
+</span><span style="color:#75715e">//    19        320        8192       25         192     11.80%
+</span><span style="color:#75715e">//    20        352        8192       23          96      9.88%
+</span><span style="color:#75715e">//    21        384        8192       21         128      9.51%
+</span><span style="color:#75715e">//    22        416        8192       19         288     10.71%
+</span><span style="color:#75715e">//    23        448        8192       18         128      8.37%
+</span><span style="color:#75715e">//    24        480        8192       17          32      6.82%
+</span><span style="color:#75715e">//    25        512        8192       16           0      6.05%
+</span><span style="color:#75715e">//    26        576        8192       14         128     12.33%
+</span><span style="color:#75715e">//    27        640        8192       12         512     15.48%
+</span><span style="color:#75715e">//    28        704        8192       11         448     13.93%
+</span><span style="color:#75715e">//    29        768        8192       10         512     13.94%
+</span><span style="color:#75715e">//    30        896        8192        9         128     15.52%
+</span><span style="color:#75715e">//    31       1024        8192        8           0     12.40%
+</span><span style="color:#75715e">//    32       1152        8192        7         128     12.41%
+</span><span style="color:#75715e">//    33       1280        8192        6         512     15.55%
+</span><span style="color:#75715e">//    34       1408       16384       11         896     14.00%
+</span><span style="color:#75715e">//    35       1536        8192        5         512     14.00%
+</span><span style="color:#75715e">//    36       1792       16384        9         256     15.57%
+</span><span style="color:#75715e">//    37       2048        8192        4           0     12.45%
+</span><span style="color:#75715e">//    38       2304       16384        7         256     12.46%
+</span><span style="color:#75715e">//    39       2688        8192        3         128     15.59%
+</span><span style="color:#75715e">//    40       3072       24576        8           0     12.47%
+</span><span style="color:#75715e">//    41       3200       16384        5         384      6.22%
+</span><span style="color:#75715e">//    42       3456       24576        7         384      8.83%
+</span><span style="color:#75715e">//    43       4096        8192        2           0     15.60%
+</span><span style="color:#75715e">//    44       4864       24576        5         256     16.65%
+</span><span style="color:#75715e">//    45       5376       16384        3         256     10.92%
+</span><span style="color:#75715e">//    46       6144       24576        4           0     12.48%
+</span><span style="color:#75715e">//    47       6528       32768        5         128      6.23%
+</span><span style="color:#75715e">//    48       6784       40960        6         256      4.36%
+</span><span style="color:#75715e">//    49       6912       49152        7         768      3.37%
+</span><span style="color:#75715e">//    50       8192        8192        1           0     15.61%
+</span><span style="color:#75715e">//    51       9472       57344        6         512     14.28%
+</span><span style="color:#75715e">//    52       9728       49152        5         512      3.64%
+</span><span style="color:#75715e">//    53      10240       40960        4           0      4.99%
+</span><span style="color:#75715e">//    54      10880       32768        3         128      6.24%
+</span><span style="color:#75715e">//    55      12288       24576        2           0     11.45%
+</span><span style="color:#75715e">//    56      13568       40960        3         256      9.99%
+</span><span style="color:#75715e">//    57      14336       57344        4           0      5.35%
+</span><span style="color:#75715e">//    58      16384       16384        1           0     12.49%
+</span><span style="color:#75715e">//    59      18432       73728        4           0     11.11%
+</span><span style="color:#75715e">//    60      19072       57344        3         128      3.57%
+</span><span style="color:#75715e">//    61      20480       40960        2           0      6.87%
+</span><span style="color:#75715e">//    62      21760       65536        3         256      6.25%
+</span><span style="color:#75715e">//    63      24576       24576        1           0     11.45%
+</span><span style="color:#75715e">//    64      27264       81920        3         128     10.00%
+</span><span style="color:#75715e">//    65      28672       57344        2           0      4.91%
+</span><span style="color:#75715e"></span><span style="color:#f92672">//</span>    <span style="color:#ae81ff">66</span>      <span style="color:#ae81ff">32768</span>       <span style="color:#ae81ff">32768</span>        <span style="color:#ae81ff">1</span>           <span style="color:#ae81ff">0</span>     <span style="color:#ae81ff">12.50</span><span style="color:#f92672">%</span></code></pre></div>
 
 <h2 id="mcache-1">mcache</h2>
 
@@ -446,90 +530,6 @@ arena 根據不同 CPU 架構、OS 會有所不同，常見的 linux 64-bit 目�
 	<span style="color:#75715e">// spans 將 arena 裡的 page 對應到相對應的 mspan。
 </span><span style="color:#75715e"></span>	<span style="color:#a6e22e">spans</span> [<span style="color:#a6e22e">pagesPerArena</span>]<span style="color:#f92672">*</span><span style="color:#a6e22e">mspan</span>
 }</code></pre></div></p>
-
-<h2 id="size-class">size class</h2>
-
-<p><a href="https://github.com/golang/go/blob/go1.12.5/src/runtime/sizeclasses.go#L6">Source code</a></p>
-
-<p>下表為 Golang 所有的 size class，下列解釋各 column 意義：</p>
-
-<ul>
-<li>class：此 class 的編號，分類時皆使用此編號作為 index</li>
-<li>bytes/obj：此 class 一個 object 的大小</li>
-<li>bytes/span：此 class 一個 mspan 的大小</li>
-<li>objects：此 class 的 object 數量</li>
-<li>tail waste：此 class 因無法完整分配所造成的浪費，例如 class 4，浪費了 32 bytes = 8192 - 48*170</li>
-<li>max waste：此 class 最多可能浪費的空間，計算公式為：((object size - (前一級的 object size + 1)) * object 數量 + tail waste) / mspan size，例如 class 4 為 31.52% = ((48 - (32 + 1)) * 170 + 32) / 8192</li>
-</ul>
-
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">// sizeclasses.go
-</span><span style="color:#75715e">// class  bytes/obj  bytes/span  objects  tail waste  max waste
-</span><span style="color:#75715e">//     1          8        8192     1024           0     87.50%
-</span><span style="color:#75715e">//     2         16        8192      512           0     43.75%
-</span><span style="color:#75715e">//     3         32        8192      256           0     46.88%
-</span><span style="color:#75715e">//     4         48        8192      170          32     31.52%
-</span><span style="color:#75715e">//     5         64        8192      128           0     23.44%
-</span><span style="color:#75715e">//     6         80        8192      102          32     19.07%
-</span><span style="color:#75715e">//     7         96        8192       85          32     15.95%
-</span><span style="color:#75715e">//     8        112        8192       73          16     13.56%
-</span><span style="color:#75715e">//     9        128        8192       64           0     11.72%
-</span><span style="color:#75715e">//    10        144        8192       56         128     11.82%
-</span><span style="color:#75715e">//    11        160        8192       51          32      9.73%
-</span><span style="color:#75715e">//    12        176        8192       46          96      9.59%
-</span><span style="color:#75715e">//    13        192        8192       42         128      9.25%
-</span><span style="color:#75715e">//    14        208        8192       39          80      8.12%
-</span><span style="color:#75715e">//    15        224        8192       36         128      8.15%
-</span><span style="color:#75715e">//    16        240        8192       34          32      6.62%
-</span><span style="color:#75715e">//    17        256        8192       32           0      5.86%
-</span><span style="color:#75715e">//    18        288        8192       28         128     12.16%
-</span><span style="color:#75715e">//    19        320        8192       25         192     11.80%
-</span><span style="color:#75715e">//    20        352        8192       23          96      9.88%
-</span><span style="color:#75715e">//    21        384        8192       21         128      9.51%
-</span><span style="color:#75715e">//    22        416        8192       19         288     10.71%
-</span><span style="color:#75715e">//    23        448        8192       18         128      8.37%
-</span><span style="color:#75715e">//    24        480        8192       17          32      6.82%
-</span><span style="color:#75715e">//    25        512        8192       16           0      6.05%
-</span><span style="color:#75715e">//    26        576        8192       14         128     12.33%
-</span><span style="color:#75715e">//    27        640        8192       12         512     15.48%
-</span><span style="color:#75715e">//    28        704        8192       11         448     13.93%
-</span><span style="color:#75715e">//    29        768        8192       10         512     13.94%
-</span><span style="color:#75715e">//    30        896        8192        9         128     15.52%
-</span><span style="color:#75715e">//    31       1024        8192        8           0     12.40%
-</span><span style="color:#75715e">//    32       1152        8192        7         128     12.41%
-</span><span style="color:#75715e">//    33       1280        8192        6         512     15.55%
-</span><span style="color:#75715e">//    34       1408       16384       11         896     14.00%
-</span><span style="color:#75715e">//    35       1536        8192        5         512     14.00%
-</span><span style="color:#75715e">//    36       1792       16384        9         256     15.57%
-</span><span style="color:#75715e">//    37       2048        8192        4           0     12.45%
-</span><span style="color:#75715e">//    38       2304       16384        7         256     12.46%
-</span><span style="color:#75715e">//    39       2688        8192        3         128     15.59%
-</span><span style="color:#75715e">//    40       3072       24576        8           0     12.47%
-</span><span style="color:#75715e">//    41       3200       16384        5         384      6.22%
-</span><span style="color:#75715e">//    42       3456       24576        7         384      8.83%
-</span><span style="color:#75715e">//    43       4096        8192        2           0     15.60%
-</span><span style="color:#75715e">//    44       4864       24576        5         256     16.65%
-</span><span style="color:#75715e">//    45       5376       16384        3         256     10.92%
-</span><span style="color:#75715e">//    46       6144       24576        4           0     12.48%
-</span><span style="color:#75715e">//    47       6528       32768        5         128      6.23%
-</span><span style="color:#75715e">//    48       6784       40960        6         256      4.36%
-</span><span style="color:#75715e">//    49       6912       49152        7         768      3.37%
-</span><span style="color:#75715e">//    50       8192        8192        1           0     15.61%
-</span><span style="color:#75715e">//    51       9472       57344        6         512     14.28%
-</span><span style="color:#75715e">//    52       9728       49152        5         512      3.64%
-</span><span style="color:#75715e">//    53      10240       40960        4           0      4.99%
-</span><span style="color:#75715e">//    54      10880       32768        3         128      6.24%
-</span><span style="color:#75715e">//    55      12288       24576        2           0     11.45%
-</span><span style="color:#75715e">//    56      13568       40960        3         256      9.99%
-</span><span style="color:#75715e">//    57      14336       57344        4           0      5.35%
-</span><span style="color:#75715e">//    58      16384       16384        1           0     12.49%
-</span><span style="color:#75715e">//    59      18432       73728        4           0     11.11%
-</span><span style="color:#75715e">//    60      19072       57344        3         128      3.57%
-</span><span style="color:#75715e">//    61      20480       40960        2           0      6.87%
-</span><span style="color:#75715e">//    62      21760       65536        3         256      6.25%
-</span><span style="color:#75715e">//    63      24576       24576        1           0     11.45%
-</span><span style="color:#75715e">//    64      27264       81920        3         128     10.00%
-</span><span style="color:#75715e">//    65      28672       57344        2           0      4.91%
-</span><span style="color:#75715e"></span><span style="color:#f92672">//</span>    <span style="color:#ae81ff">66</span>      <span style="color:#ae81ff">32768</span>       <span style="color:#ae81ff">32768</span>        <span style="color:#ae81ff">1</span>           <span style="color:#ae81ff">0</span>     <span style="color:#ae81ff">12.50</span><span style="color:#f92672">%</span></code></pre></div>
 
 <h1 id="allocating-flow">Allocating Flow</h1>
 
@@ -1205,6 +1205,12 @@ arena 根據不同 CPU 架構、OS 會有所不同，常見的 linux 64-bit 目�
 	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">x</span>
 }</code></pre></div></p>
 
+<p>額外看一下 <code>makeSpanClass</code>：<br />
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">makeSpanClass</span>(<span style="color:#a6e22e">sizeclass</span> <span style="color:#66d9ef">uint8</span>, <span style="color:#a6e22e">noscan</span> <span style="color:#66d9ef">bool</span>) <span style="color:#a6e22e">spanClass</span> {
+	<span style="color:#75715e">// 可以看到 size class 與 span class 的轉換方式其實就是將 size class * 2 再根據是否為 pointer 加 0 或 1
+</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">spanClass</span>(<span style="color:#a6e22e">sizeclass</span><span style="color:#f92672">&lt;&lt;</span><span style="color:#ae81ff">1</span>) | <span style="color:#a6e22e">spanClass</span>(<span style="color:#a6e22e">bool2int</span>(<span style="color:#a6e22e">noscan</span>))
+}</code></pre></div></p>
+
 <h2 id="large-size">Large Size</h2>
 
 <p><a href="https://github.com/golang/go/blob/go1.12.5/src/runtime/malloc.go#L947">Source code</a></p>
@@ -1283,6 +1289,9 @@ arena 根據不同 CPU 架構、OS 會有所不同，常見的 linux 64-bit 目�
 <li><a href="https://faaaar.github.io/2019/06/05/go/memory-allocation/">https://faaaar.github.io/2019/06/05/go/memory-allocation/</a></li>
 <li><a href="https://andrestc.com/post/go-memory-allocation-pt1/">https://andrestc.com/post/go-memory-allocation-pt1/</a></li>
 <li><a href="https://www.cnblogs.com/zkweb/p/7880099.html">https://www.cnblogs.com/zkweb/p/7880099.html</a></li>
+<li><a href="http://lessisbetter.site/2019/07/06/go-memory-allocation/">http://lessisbetter.site/2019/07/06/go-memory-allocation/</a></li>
+<li><a href="https://programmer.help/blogs/exploration-of-golang-source-code-3-realization-principle-of-gc.html">https://programmer.help/blogs/exploration-of-golang-source-code-3-realization-principle-of-gc.html</a></li>
+<li><a href="https://kknews.cc/zh-tw/code/5rbk9kk.html">https://kknews.cc/zh-tw/code/5rbk9kk.html</a></li>
 </ul>
 
     </section>
