@@ -68,7 +68,7 @@
       
       
     
-    <meta name="generator" content="Hugo 0.53" />
+    <meta name="generator" content="Hugo 0.54.0" />
 
     <link rel="canonical" href="https://chihkaiyu.github.io/post/clean-code-chapter-3/" />
 
@@ -285,89 +285,89 @@
 底下程式碼是我的 side project 的其中一個函式，很明顯的可以看到有三個段落，甚至我自己還寫了註解：</p>
 
 <pre><code class="language-go">func updateAllUsers() error {
-    // get users from db
-    stmt, err := db.Prepare(&quot;select email from User&quot;)
-    if err != nil {
-        return err
-    }
-    defer stmt.Close()
-    rows, err := stmt.Query()
-    if err != nil {
-        return err
-    }
-    existedUser := make(map[string]bool)
-    for rows.Next() {
-        var e string
-        err = rows.Scan(&amp;e)
-        if err != nil {
-            return err
-        }
-        existedUser[e] = true
-    }
+	// get users from db
+	stmt, err := db.Prepare(&quot;select email from User&quot;)
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+	rows, err := stmt.Query()
+	if err != nil {
+		return err
+	}
+	existedUser := make(map[string]bool)
+	for rows.Next() {
+		var e string
+		err = rows.Scan(&amp;e)
+		if err != nil {
+			return err
+		}
+		existedUser[e] = true
+	}
 
-    // combine users by email
-    userInfos := make(map[string]userInfo)
-    err = getAllGitLabUser(userInfos)
-    if err != nil {
-        return err
-    }
+	// combine users by email
+	userInfos := make(map[string]userInfo)
+	err = getAllGitLabUser(userInfos)
+	if err != nil {
+		return err
+	}
 
-    err = getAllSlackUser(userInfos)
-    if err != nil {
-        return err
-    }
+	err = getAllSlackUser(userInfos)
+	if err != nil {
+		return err
+	}
 
-    // insert into db
-    for email, user := range userInfos {
-        // skip already existed row
-        if _, exist := existedUser[email]; exist {
-            continue
-        }
-        insert, err := db.Prepare(&quot;insert into User(email, slackID, gitlabID, name) values(?, ?, ?, ?)&quot;)
-        log.Infof(&quot;Found new user %v&quot;, user.name)
-        if err != nil {
-            return err
-        }
-        defer insert.Close()
-        res, err := insert.Exec(email, user.slackID, user.gitlabID, user.name)
-        if err != nil {
-            return err
-        }
-        lastID, err := res.LastInsertId()
-        if err != nil {
-            return err
-        }
-        rowCnt, err := res.RowsAffected()
-        if err != nil {
-            return err
-        }
-        log.Debugf(&quot;ID = %d, affected = %d&quot;, lastID, rowCnt)
-    }
-    return nil
+	// insert into db
+	for email, user := range userInfos {
+		// skip already existed row
+		if _, exist := existedUser[email]; exist {
+			continue
+		}
+		insert, err := db.Prepare(&quot;insert into User(email, slackID, gitlabID, name) values(?, ?, ?, ?)&quot;)
+		log.Infof(&quot;Found new user %v&quot;, user.name)
+		if err != nil {
+			return err
+		}
+		defer insert.Close()
+		res, err := insert.Exec(email, user.slackID, user.gitlabID, user.name)
+		if err != nil {
+			return err
+		}
+		lastID, err := res.LastInsertId()
+		if err != nil {
+			return err
+		}
+		rowCnt, err := res.RowsAffected()
+		if err != nil {
+			return err
+		}
+		log.Debugf(&quot;ID = %d, affected = %d&quot;, lastID, rowCnt)
+	}
+	return nil
 }
 </code></pre>
 
 <p>上面的函式叫作 <code>updateAllUsers</code> 所以可以想像大概流程就是從某個地方讀取資料，再更新到某個地方，那我們應該可以再將各段落拆成函式變成底下的樣子：</p>
 
 <pre><code class="language-go">func updateAllUsers() error {
-    // get users form db
-    existedUsers, err := getExistedUsers()
-    if err != nil {
-        return err
-    }
+	// get users form db
+	existedUsers, err := getExistedUsers()
+	if err != nil {
+		return err
+	}
 
-    // combine users by email
-    newUsersInfos, err := getNewUsers()
-    if err != nil {
-        return err
-    }
+	// combine users by email
+	newUsersInfos, err := getNewUsers()
+	if err != nil {
+		return err
+	}
 
-    // insert into db
-    err = insertNewUsers(newUsersInfos, existedUsers)
-    if err != nil {
-        return err
-    }
-    return nil
+	// insert into db
+	err = insertNewUsers(newUsersInfos, existedUsers)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 </code></pre>
 
@@ -418,28 +418,28 @@
 <p>作者提供的解法是將此 <code>switch</code> 敘述埋在 Abstract Factory 底下，不讓任何人看到它。這個工廠會使用 <code>switch</code> 產生適當的 <code>Employee</code> 實體。</p>
 
 <pre><code class="language-go">type Employee interface {
-    isPayDay() bool
-    calculatePay() Money
-    deliverPay(pay Money)
+	isPayDay() bool
+	calculatePay() Money
+	deliverPay(pay Money)
 }
 
 type EmployeeFactory interface {
-    CreateEmployee(r EmployeeRecord) Employee
+	CreateEmployee(r EmployeeRecord) Employee
 }
 
 type EmployeeFactoryImpl struct {}
 
 func (e *EmployeeFactoryImpl) CreateEmployee(r EmployeeRecord) Employee {
-    switch er := r.(type) {
-    case COMMISSIONED:
-        return new(CommissionedEmployee)
-    case HOURLY:
-        return new(HourlyEmployee)
-    case SALARIED:
-        return new(SalariedEmployee)
-    default:
-        return fmt.Errorf(&quot;Invalid employee type: %v&quot;, er)
-    }
+	switch er := r.(type) {
+	case COMMISSIONED:
+		return new(CommissionedEmployee)
+	case HOURLY:
+		return new(HourlyEmployee)
+	case SALARIED:
+		return new(SalariedEmployee)
+	default:
+		return fmt.Errorf(&quot;Invalid employee type: %v&quot;, er)
+	}
 }
 
 type CommissionedEmployee struct {}

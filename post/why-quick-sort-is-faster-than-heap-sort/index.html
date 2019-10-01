@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    
+    
+        
+        <meta name="twitter:card" content="summary_large_image"/>
+        <meta name="twitter:image" content="/content/images/2019/10/DSC05514.jpg"/>
+    
+
+
+
+<meta name="twitter:title" content="Why Quick Sort Is Faster than Heap Sort?"/>
+<meta name="twitter:description" content=""/>
+<meta name="twitter:site" content="@kai_chihkaiyu"/>
+
+
+
+  	<meta property="og:title" content="Why Quick Sort Is Faster than Heap Sort? &middot; No Idiots Allowed Here" />
+  	<meta property="og:site_name" content="No Idiots Allowed Here" />
+  	<meta property="og:url" content="https://chihkaiyu.github.io/post/why-quick-sort-is-faster-than-heap-sort/" />
+
+    
+       <meta property="og:image" content="/content/images/2019/10/DSC05514.jpg"/>
+    
+
+    
+    <meta property="og:description" content="" />
+  	<meta property="og:type" content="article" />
+    <meta property="article:published_time" content="2019-10-02T01:10:00&#43;08:00" />
+
+    
+    <meta property="article:tag" content="algorithm" />
+    
+    
+
+    <title>Why Quick Sort Is Faster than Heap Sort? &middot; No Idiots Allowed Here</title>
+
+    
+    <meta name="description" content="Why Quick Sort? I was reviewing sorting algorithm for my interview. The question just popped up in my mind when I was peeking the cheat sheet.
+[1]
+You can see t" />
+    
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="shortcut icon" href="https://chihkaiyu.github.io/images/favicon.ico">
+	  <link rel="apple-touch-icon" href="https://chihkaiyu.github.io/images/apple-touch-icon.png" />
+
+    <link rel="stylesheet" type="text/css" href="https://chihkaiyu.github.io/css/screen.css" />
+    <link rel="stylesheet" type="text/css" href="https://chihkaiyu.github.io/css/nav.css" />
+
+    
+
+    
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/styles/default.min.css">
+        <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/highlight.min.js"></script>
+        
+        <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+      
+          <link href="https://chihkaiyu.github.io/index.xml" rel="alternate" type="application/rss+xml" title="No Idiots Allowed Here" />
+      
+      
+    
+    <meta name="generator" content="Hugo 0.54.0" />
+
+    <link rel="canonical" href="https://chihkaiyu.github.io/post/why-quick-sort-is-faster-than-heap-sort/" />
+
+    
+      
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": ,
+        "logo": https://chihkaiyu.github.ioimages/profile.png
+    },
+    "author": {
+        "@type": "Person",
+        "name": ,
+        
+        "image": {
+            "@type": "ImageObject",
+            "url": https://chihkaiyu.github.ioimages/profile.png,
+            "width": 250,
+            "height": 250
+        }, 
+        
+        "url": https://chihkaiyu.github.io,
+        "sameAs": [
+            
+            
+             
+             
+             
+             
+             
+            
+        ],
+        "description": Software Engineer
+        
+    },
+    "headline": Why Quick Sort Is Faster than Heap Sort?,
+    "name": Why Quick Sort Is Faster than Heap Sort?,
+    "wordCount": 1621,
+    "timeRequired": "PT8M",
+    "inLanguage": {
+      "@type": "Language",
+      "alternateName": en
+    },
+    "url": https://chihkaiyu.github.io/post/why-quick-sort-is-faster-than-heap-sort/,
+    "datePublished": 2019-10-02T01:10Z,
+    "dateModified": 2019-10-02T01:10Z,
+    
+    "image": {
+        "@type": "ImageObject",
+        "url": https://chihkaiyu.github.io/content/images/2019/10/DSC05514.jpg,
+        "width": 3000,
+        "height": 1445
+    },
+    
+    "keywords": algorithm,
+    "description": ,
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": https://chihkaiyu.github.io/post/why-quick-sort-is-faster-than-heap-sort/
+    }
+}
+    </script>
+    
+
+
+    
+
+    
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-132491233-1', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+    
+
+    
+</head>
+<body class="nav-closed">
+
+  <div class="nav">
+    <h3 class="nav-title">Menu</h3>
+    <a href="#" class="nav-close">
+        <span class="hidden">Close</span>
+    </a>
+    <ul>
+        
+        
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://chihkaiyu.github.io/">Home</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://chihkaiyu.github.io/page/about">About</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://chihkaiyu.github.io/post">Archives</a>
+            </li>
+        
+            
+            <li class="nav-opened" role="presentation">
+            	<a href="https://chihkaiyu.github.io/page/tags">Tags</a>
+            </li>
+        
+        
+    </ul>
+
+    
+    <a class="subscribe-button icon-feed" href="https://chihkaiyu.github.io/index.xml">Subscribe</a>
+    
+</div>
+<span class="nav-cover"></span>
+
+
+ <div class="site-wrapper">
+
+
+
+  
+  <header class="main-header post-head" style="background-image: url(/content/images/2019/10/DSC05514.jpg)">
+  
+  <nav class="main-nav overlay clearfix">
+
+
+  
+      <a class="blog-logo" href="https://chihkaiyu.github.io"><img src="https://chihkaiyu.github.io/images/profile.png" alt="Home" /></a>
+  
+  
+      <a class="menu-button" href="#"><span class="burger">&#9776;</span><span class="word">Menu</span></a>
+  
+  </nav>
+</header>
+
+
+
+<main class="content" role="main">
+
+
+
+
+  <article class="post post">
+
+    <header class="post-header">
+        <h1 class="post-title">Why Quick Sort Is Faster than Heap Sort?</h1>
+        <small></small>
+
+        <section class="post-meta">
+        
+          <time class="post-date" datetime="2019-10-02T01:10:00&#43;08:00">
+            Oct 2, 2019
+          </time>
+        
+         
+          <span class="post-tag small"><a href="https://chihkaiyu.github.io/tags/algorithm/">#algorithm</a></span>
+         
+        </section>
+    </header>
+
+    <section class="post-content">
+      
+
+<h1 id="why-quick-sort">Why Quick Sort?</h1>
+
+<p>I was reviewing sorting algorithm for my interview. The question just popped up in my mind when I was peeking the cheat sheet.</p>
+
+<p><img src="https://chihkaiyu.github.io/content/images/2019/10/sorting-cheat-sheet.png" alt="" />[1]</p>
+
+<p>You can see the best, average and worst time complexity of heap sort are all O(n logn) but it&rsquo;s O(n^2) for worst of quick sort.<br />
+Then why do we always use quick sort? Since quick sort can&rsquo;t beat heap sort in any cases, not even in space complexity.<br />
+I don&rsquo;t see any advantages of choosing quick sort.</p>
+
+<h1 id="time-complexity">Time Complexity</h1>
+
+<p>Let&rsquo;s review time complexity. Here is the definition from Wikipedia [2]:</p>
+
+<blockquote>
+<p>In computer science, the time complexity is the computational complexity that describes the amount of time it takes to run an algorithm. Time complexity is commonly estimated by counting the number of elementary operations performed by the algorithm, supposing that each elementary operation takes a fixed amount of time to perform. Thus, the amount of time taken and the number of elementary operations performed by the algorithm are taken to differ by at most a constant factor.</p>
+</blockquote>
+
+<p>I&rsquo;d like to focus on this sentence: <code>supposing that each elementary operation takes a fixed amount of time to perform</code>.<br />
+That means we do actually ignore the real world running time. It&rsquo;s okay to do this since time complexity is used to describe the growth rate between an algorithm and it&rsquo;s input size.</p>
+
+<p>Let&rsquo;s take a look at another thing: constant time [3]:</p>
+
+<blockquote>
+<p>An algorithm is said to be constant time (also written as O(1) time) if the value of T(n) is bounded by a value that does not depend on the size of the input. Despite the name &ldquo;constant time&rdquo;, the running time does not have to be independent of the problem size, but an upper bound for the running time has to be bounded independently of the problem size. For example, the task &ldquo;exchange the values of a and b if necessary so that a≤b&rdquo; is called constant time even though the time may depend on whether or not it is already true that a ≤ b. However, there is some constant t such that the time required is always at most t.</p>
+</blockquote>
+
+<p>Now, we should focos on this one: <code>despite the name &quot;constant time&quot;, the running time does not have to be independent of the problem size, but an upper bound for the running time has to be bounded independently of the problem size</code>.<br />
+For example, take a look at the code below:<br />
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">sum</span>(<span style="color:#a6e22e">num</span> []<span style="color:#66d9ef">int</span>) <span style="color:#66d9ef">int</span> {
+    <span style="color:#a6e22e">count</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">0</span>
+    <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">v</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">num</span> {
+        <span style="color:#a6e22e">count</span> <span style="color:#f92672">+=</span> <span style="color:#a6e22e">v</span>
+    }
+
+    <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">i</span> &lt; <span style="color:#ae81ff">1000</span>; <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span> {
+        <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">j</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">j</span> &lt; <span style="color:#ae81ff">1000</span>; <span style="color:#a6e22e">j</span><span style="color:#f92672">++</span> {
+            <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#e6db74">&#34;constant operation here!&#34;</span>)
+        }
+    }
+
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">count</span>
+}</code></pre></div></p>
+
+<p>What&rsquo;s the time complexity you would say about this piece of code? O(n)? O(n^2)? (where n is the size of slice <code>num</code>)<br />
+We all know the time complexity is O(n) though there is a nested loop which runs a million times.<br />
+Why we can just drop the nested loop here? No matter how we change the size of input, the running time of the nested loop is all the same. That is, <code>an upper bound for the running time has to be bounded independently</code>.</p>
+
+<h1 id="non-negligible-constant">Non-negligible Constant</h1>
+
+<p>I wrote quick sort and heap sort and here is the code:<br />
+Quick sort:<br />
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">quickSort</span>(<span style="color:#a6e22e">numbers</span> []<span style="color:#66d9ef">int</span>, <span style="color:#a6e22e">left</span>, <span style="color:#a6e22e">right</span> <span style="color:#66d9ef">int</span>, <span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Comparer</span>) {
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">lessEqual</span>(<span style="color:#a6e22e">right</span>, <span style="color:#a6e22e">left</span>) {
+		<span style="color:#66d9ef">return</span>
+	}
+
+	<span style="color:#a6e22e">pivot</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">numbers</span>[<span style="color:#a6e22e">left</span>]
+	<span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">left</span>
+	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">j</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">left</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>; <span style="color:#a6e22e">j</span> <span style="color:#f92672">&lt;=</span> <span style="color:#a6e22e">right</span>; <span style="color:#a6e22e">j</span><span style="color:#f92672">++</span> {
+		<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">less</span>(<span style="color:#a6e22e">numbers</span>[<span style="color:#a6e22e">j</span>], <span style="color:#a6e22e">pivot</span>) {
+			<span style="color:#a6e22e">i</span><span style="color:#f92672">++</span>
+			<span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">swap</span>(<span style="color:#a6e22e">numbers</span>, <span style="color:#a6e22e">i</span>, <span style="color:#a6e22e">j</span>)
+		}
+	}
+	<span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">swap</span>(<span style="color:#a6e22e">numbers</span>, <span style="color:#a6e22e">i</span>, <span style="color:#a6e22e">left</span>)
+
+	<span style="color:#a6e22e">quickSort</span>(<span style="color:#a6e22e">numbers</span>, <span style="color:#a6e22e">left</span>, <span style="color:#a6e22e">i</span><span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>, <span style="color:#a6e22e">c</span>)
+	<span style="color:#a6e22e">quickSort</span>(<span style="color:#a6e22e">numbers</span>, <span style="color:#a6e22e">i</span><span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>, <span style="color:#a6e22e">right</span>, <span style="color:#a6e22e">c</span>)
+}</code></pre></div></p>
+
+<p>Heap sort:<br />
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">heapSort</span>(<span style="color:#a6e22e">heap</span> []<span style="color:#66d9ef">int</span>, <span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Comparer</span>) {
+	<span style="color:#a6e22e">end</span> <span style="color:#f92672">:=</span> len(<span style="color:#a6e22e">heap</span>) <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>
+
+	<span style="color:#75715e">// build max heap
+</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> len(<span style="color:#a6e22e">heap</span>) <span style="color:#f92672">/</span> <span style="color:#ae81ff">2</span>; <span style="color:#a6e22e">i</span> <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">i</span><span style="color:#f92672">--</span> {
+		<span style="color:#a6e22e">heapify</span>(<span style="color:#a6e22e">heap</span>, <span style="color:#a6e22e">i</span>, <span style="color:#a6e22e">end</span>, <span style="color:#a6e22e">c</span>)
+	}
+
+	<span style="color:#75715e">// sort heap
+</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">end</span>; <span style="color:#a6e22e">i</span> &gt; <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">i</span><span style="color:#f92672">--</span> {
+		<span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">swap</span>(<span style="color:#a6e22e">heap</span>, <span style="color:#ae81ff">0</span>, <span style="color:#a6e22e">i</span>)
+		<span style="color:#a6e22e">heapify</span>(<span style="color:#a6e22e">heap</span>, <span style="color:#ae81ff">0</span>, <span style="color:#a6e22e">i</span><span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>, <span style="color:#a6e22e">c</span>)
+	}
+}
+
+<span style="color:#66d9ef">func</span> <span style="color:#a6e22e">heapify</span>(<span style="color:#a6e22e">heap</span> []<span style="color:#66d9ef">int</span>, <span style="color:#a6e22e">i</span>, <span style="color:#a6e22e">end</span> <span style="color:#66d9ef">int</span>, <span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Comparer</span>) {
+	<span style="color:#a6e22e">left</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">2</span><span style="color:#f92672">*</span><span style="color:#a6e22e">i</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">less</span>(<span style="color:#a6e22e">end</span>, <span style="color:#a6e22e">left</span>) {
+		<span style="color:#66d9ef">return</span>
+	}
+
+	<span style="color:#a6e22e">target</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">left</span>
+	<span style="color:#a6e22e">right</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">left</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>
+
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">lessEqual</span>(<span style="color:#a6e22e">right</span>, <span style="color:#a6e22e">end</span>) <span style="color:#f92672">&amp;&amp;</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">less</span>(<span style="color:#a6e22e">heap</span>[<span style="color:#a6e22e">left</span>], <span style="color:#a6e22e">heap</span>[<span style="color:#a6e22e">right</span>]) {
+		<span style="color:#a6e22e">target</span> = <span style="color:#a6e22e">right</span>
+	}
+
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">less</span>(<span style="color:#a6e22e">heap</span>[<span style="color:#a6e22e">target</span>], <span style="color:#a6e22e">heap</span>[<span style="color:#a6e22e">i</span>]) {
+		<span style="color:#66d9ef">return</span>
+	}
+
+	<span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">swap</span>(<span style="color:#a6e22e">heap</span>, <span style="color:#a6e22e">i</span>, <span style="color:#a6e22e">target</span>)
+	<span style="color:#a6e22e">heapify</span>(<span style="color:#a6e22e">heap</span>, <span style="color:#a6e22e">target</span>, <span style="color:#a6e22e">end</span>, <span style="color:#a6e22e">c</span>)
+}</code></pre></div></p>
+
+<p>Let&rsquo;s run it and record the running time (I ran it 10 times for each size of input and average it).<br />
+Here is the result:<br />
+<img src="https://chihkaiyu.github.io/content/images/2019/10/running-time.png" alt="" /></p>
+
+<p>Actual number (first row represents the input size):</p>
+
+<pre><code class="language-txt">Running time (in microsecond)
+#       1000    10000   100000  1000000
+Quick   65      680     9178    104027
+Heap    138     1652    21579   357418
+</code></pre>
+
+<p>You can see that quick sort is 2-3 times faster than heap sort.<br />
+Why this happens?<br />
+Sorting algorithm basically does two things: comparison and swapping. Let&rsquo;s dig more from it.</p>
+
+<p>You may have noticed there is a strange struct <code>Comparer</code> in the code above. I built this for counting the number of swapping and comparison.<br />
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Comparer</span>) <span style="color:#a6e22e">less</span>(<span style="color:#a6e22e">i</span>, <span style="color:#a6e22e">j</span> <span style="color:#66d9ef">int</span>) <span style="color:#66d9ef">bool</span> {
+	<span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">compareCount</span><span style="color:#f92672">++</span>
+
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">i</span> &lt; <span style="color:#a6e22e">j</span> {
+		<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span>
+	}
+
+	<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span>
+}
+
+<span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Comparer</span>) <span style="color:#a6e22e">lessEqual</span>(<span style="color:#a6e22e">i</span>, <span style="color:#a6e22e">j</span> <span style="color:#66d9ef">int</span>) <span style="color:#66d9ef">bool</span> {
+	<span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">compareCount</span><span style="color:#f92672">++</span>
+
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">&lt;=</span> <span style="color:#a6e22e">j</span> {
+		<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span>
+	}
+
+	<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span>
+}
+
+<span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Comparer</span>) <span style="color:#a6e22e">swap</span>(<span style="color:#a6e22e">numbers</span> []<span style="color:#66d9ef">int</span>, <span style="color:#a6e22e">i</span>, <span style="color:#a6e22e">j</span> <span style="color:#66d9ef">int</span>) {
+	<span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">swapCount</span><span style="color:#f92672">++</span>
+
+	<span style="color:#a6e22e">numbers</span>[<span style="color:#a6e22e">i</span>], <span style="color:#a6e22e">numbers</span>[<span style="color:#a6e22e">j</span>] = <span style="color:#a6e22e">numbers</span>[<span style="color:#a6e22e">j</span>], <span style="color:#a6e22e">numbers</span>[<span style="color:#a6e22e">i</span>]
+}</code></pre></div></p>
+
+<p>Now let&rsquo;s see the result:<br />
+Swapping:<br />
+<img src="https://chihkaiyu.github.io/content/images/2019/10/swap-count.png" alt="" /></p>
+
+<p>Acutal number:</p>
+
+<pre><code class="language-txt">Swap
+#       1000    10000   100000  1000000
+Quick   6121    84340   1059759 12768393
+Heap    9081    124193  1574975 19047943
+</code></pre>
+
+<p>Comparison:<br />
+<img src="https://chihkaiyu.github.io/content/images/2019/10/compare-count.png" alt="" /></p>
+
+<p>Actual number:</p>
+
+<pre><code class="language-txt">Comparison
+#       1000    10000   100000  1000000
+Quick   12054   171241  2171008 26372074
+Heap    34868   482183  6154440 74738690
+</code></pre>
+
+<p>The numbers swapping and comparison of quick sort are far less than heap sort.<br />
+I think there are two reasons for this.<br />
+First, when we talk about time complexity, we actually talk about the input size and it&rsquo;s running time. More precisely, the growth rate of running time and input size. We just drop all &ldquo;fixed&rdquo; operation.<br />
+Second, as I mention above, time complexity supposes every elementary operation takes a fixed amount of time and I reckon that swapping takes more time than comparison.<br />
+Besides these two reasons, we can even consider hardware level things such as memory locality or CPU cache line.<br />
+In other words, heap sort does too many useless swapping. Heap sort swaps elements for only maintaining &ldquo;heap&rdquo; structure. On the other hand, quick sort swaps elements for finding which one is greater or less than pivot and somehow this is really doing &ldquo;sorting&rdquo;.</p>
+
+<h1 id="conclusion">Conclusion</h1>
+
+<p>Time complexity is a way to describe how running time of an algorithm grows. Though the input size is the dominant factor, we still have to keep an eye on those &ldquo;non-negligible&rdquo; constant.<br />
+<a href="https://www.geeksforgeeks.org/know-sorting-algorithm-set-1-sorting-weapons-used-programming-languages/">This page</a>[4] lists what sorting algorithm of a language uses. Most of them are hybrid algorithm for generality.</p>
+
+<h1 id="reference">Reference</h1>
+
+<ul>
+<li>[1] <a href="https://www.bigocheatsheet.com/">https://www.bigocheatsheet.com/</a></li>
+<li>[2] <a href="https://en.wikipedia.org/wiki/Time_complexity">https://en.wikipedia.org/wiki/Time_complexity</a></li>
+<li>[3] <a href="https://en.wikipedia.org/wiki/Time_complexity#Constant_time">https://en.wikipedia.org/wiki/Time_complexity#Constant_time</a></li>
+<li>[4] <a href="https://www.geeksforgeeks.org/know-sorting-algorithm-set-1-sorting-weapons-used-programming-languages/">https://www.geeksforgeeks.org/know-sorting-algorithm-set-1-sorting-weapons-used-programming-languages/</a></li>
+<li><a href="https://stackoverflow.com/questions/2467751/quicksort-vs-heapsort">https://stackoverflow.com/questions/2467751/quicksort-vs-heapsort</a></li>
+<li><a href="https://stackoverflow.com/questions/1853208/quicksort-superiority-over-heap-sort">https://stackoverflow.com/questions/1853208/quicksort-superiority-over-heap-sort</a></li>
+<li><a href="https://web.archive.org/web/20130801175915/http://www.cs.auckland.ac.nz/~jmor159/PLDS210/qsort3.html">https://web.archive.org/web/20130801175915/http://www.cs.auckland.ac.nz/~jmor159/PLDS210/qsort3.html</a></li>
+<li><a href="https://medium.com/@k2u4yt/quicksort-vs-heapsort-3b6dc5395083">https://medium.com/@k2u4yt/quicksort-vs-heapsort-3b6dc5395083</a></li>
+</ul>
+
+<h1 id="appendix">Appendix</h1>
+
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#f92672">package</span> <span style="color:#a6e22e">main</span>
+
+<span style="color:#f92672">import</span> (
+	<span style="color:#e6db74">&#34;fmt&#34;</span>
+	<span style="color:#e6db74">&#34;math/rand&#34;</span>
+	<span style="color:#e6db74">&#34;reflect&#34;</span>
+	<span style="color:#e6db74">&#34;time&#34;</span>
+)
+
+<span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Comparer</span> <span style="color:#66d9ef">struct</span> {
+	<span style="color:#a6e22e">swapCount</span>    <span style="color:#66d9ef">int</span>
+	<span style="color:#a6e22e">compareCount</span> <span style="color:#66d9ef">int</span>
+}
+
+<span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Comparer</span>) <span style="color:#a6e22e">less</span>(<span style="color:#a6e22e">i</span>, <span style="color:#a6e22e">j</span> <span style="color:#66d9ef">int</span>) <span style="color:#66d9ef">bool</span> {
+	<span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">compareCount</span><span style="color:#f92672">++</span>
+
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">i</span> &lt; <span style="color:#a6e22e">j</span> {
+		<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span>
+	}
+
+	<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span>
+}
+
+<span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Comparer</span>) <span style="color:#a6e22e">lessEqual</span>(<span style="color:#a6e22e">i</span>, <span style="color:#a6e22e">j</span> <span style="color:#66d9ef">int</span>) <span style="color:#66d9ef">bool</span> {
+	<span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">compareCount</span><span style="color:#f92672">++</span>
+
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">&lt;=</span> <span style="color:#a6e22e">j</span> {
+		<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span>
+	}
+
+	<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span>
+}
+
+<span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Comparer</span>) <span style="color:#a6e22e">swap</span>(<span style="color:#a6e22e">numbers</span> []<span style="color:#66d9ef">int</span>, <span style="color:#a6e22e">i</span>, <span style="color:#a6e22e">j</span> <span style="color:#66d9ef">int</span>) {
+	<span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">swapCount</span><span style="color:#f92672">++</span>
+
+	<span style="color:#a6e22e">numbers</span>[<span style="color:#a6e22e">i</span>], <span style="color:#a6e22e">numbers</span>[<span style="color:#a6e22e">j</span>] = <span style="color:#a6e22e">numbers</span>[<span style="color:#a6e22e">j</span>], <span style="color:#a6e22e">numbers</span>[<span style="color:#a6e22e">i</span>]
+}
+
+<span style="color:#66d9ef">func</span> <span style="color:#a6e22e">getRandomSlice</span>(<span style="color:#a6e22e">n</span> <span style="color:#66d9ef">int</span>) []<span style="color:#66d9ef">int</span> {
+	<span style="color:#a6e22e">source</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">rand</span>.<span style="color:#a6e22e">NewSource</span>(<span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Now</span>().<span style="color:#a6e22e">UnixNano</span>())
+	<span style="color:#a6e22e">r</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">rand</span>.<span style="color:#a6e22e">New</span>(<span style="color:#a6e22e">source</span>)
+	<span style="color:#a6e22e">s</span> <span style="color:#f92672">:=</span> make([]<span style="color:#66d9ef">int</span>, <span style="color:#a6e22e">n</span>)
+	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">s</span> {
+		<span style="color:#a6e22e">s</span>[<span style="color:#a6e22e">i</span>] = <span style="color:#a6e22e">r</span>.<span style="color:#a6e22e">Intn</span>(<span style="color:#a6e22e">n</span>)
+	}
+
+	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">s</span>
+}
+
+<span style="color:#66d9ef">func</span> <span style="color:#a6e22e">heapify</span>(<span style="color:#a6e22e">heap</span> []<span style="color:#66d9ef">int</span>, <span style="color:#a6e22e">i</span>, <span style="color:#a6e22e">end</span> <span style="color:#66d9ef">int</span>, <span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Comparer</span>) {
+	<span style="color:#a6e22e">left</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">2</span><span style="color:#f92672">*</span><span style="color:#a6e22e">i</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">less</span>(<span style="color:#a6e22e">end</span>, <span style="color:#a6e22e">left</span>) {
+		<span style="color:#66d9ef">return</span>
+	}
+
+	<span style="color:#a6e22e">target</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">left</span>
+	<span style="color:#a6e22e">right</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">left</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>
+
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">lessEqual</span>(<span style="color:#a6e22e">right</span>, <span style="color:#a6e22e">end</span>) <span style="color:#f92672">&amp;&amp;</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">less</span>(<span style="color:#a6e22e">heap</span>[<span style="color:#a6e22e">left</span>], <span style="color:#a6e22e">heap</span>[<span style="color:#a6e22e">right</span>]) {
+		<span style="color:#a6e22e">target</span> = <span style="color:#a6e22e">right</span>
+	}
+
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">less</span>(<span style="color:#a6e22e">heap</span>[<span style="color:#a6e22e">target</span>], <span style="color:#a6e22e">heap</span>[<span style="color:#a6e22e">i</span>]) {
+		<span style="color:#66d9ef">return</span>
+	}
+
+	<span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">swap</span>(<span style="color:#a6e22e">heap</span>, <span style="color:#a6e22e">i</span>, <span style="color:#a6e22e">target</span>)
+	<span style="color:#a6e22e">heapify</span>(<span style="color:#a6e22e">heap</span>, <span style="color:#a6e22e">target</span>, <span style="color:#a6e22e">end</span>, <span style="color:#a6e22e">c</span>)
+}
+
+<span style="color:#66d9ef">func</span> <span style="color:#a6e22e">heapSort</span>(<span style="color:#a6e22e">heap</span> []<span style="color:#66d9ef">int</span>, <span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Comparer</span>) {
+	<span style="color:#a6e22e">end</span> <span style="color:#f92672">:=</span> len(<span style="color:#a6e22e">heap</span>) <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>
+
+	<span style="color:#75715e">// build max heap
+</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> len(<span style="color:#a6e22e">heap</span>) <span style="color:#f92672">/</span> <span style="color:#ae81ff">2</span>; <span style="color:#a6e22e">i</span> <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">i</span><span style="color:#f92672">--</span> {
+		<span style="color:#a6e22e">heapify</span>(<span style="color:#a6e22e">heap</span>, <span style="color:#a6e22e">i</span>, <span style="color:#a6e22e">end</span>, <span style="color:#a6e22e">c</span>)
+	}
+
+	<span style="color:#75715e">// sort heap
+</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">end</span>; <span style="color:#a6e22e">i</span> &gt; <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">i</span><span style="color:#f92672">--</span> {
+		<span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">swap</span>(<span style="color:#a6e22e">heap</span>, <span style="color:#ae81ff">0</span>, <span style="color:#a6e22e">i</span>)
+		<span style="color:#a6e22e">heapify</span>(<span style="color:#a6e22e">heap</span>, <span style="color:#ae81ff">0</span>, <span style="color:#a6e22e">i</span><span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>, <span style="color:#a6e22e">c</span>)
+	}
+}
+
+<span style="color:#66d9ef">func</span> <span style="color:#a6e22e">quickSort</span>(<span style="color:#a6e22e">numbers</span> []<span style="color:#66d9ef">int</span>, <span style="color:#a6e22e">left</span>, <span style="color:#a6e22e">right</span> <span style="color:#66d9ef">int</span>, <span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Comparer</span>) {
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">lessEqual</span>(<span style="color:#a6e22e">right</span>, <span style="color:#a6e22e">left</span>) {
+		<span style="color:#66d9ef">return</span>
+	}
+
+	<span style="color:#a6e22e">pivot</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">numbers</span>[<span style="color:#a6e22e">left</span>]
+	<span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">left</span>
+	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">j</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">left</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>; <span style="color:#a6e22e">j</span> <span style="color:#f92672">&lt;=</span> <span style="color:#a6e22e">right</span>; <span style="color:#a6e22e">j</span><span style="color:#f92672">++</span> {
+		<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">less</span>(<span style="color:#a6e22e">numbers</span>[<span style="color:#a6e22e">j</span>], <span style="color:#a6e22e">pivot</span>) {
+			<span style="color:#a6e22e">i</span><span style="color:#f92672">++</span>
+			<span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">swap</span>(<span style="color:#a6e22e">numbers</span>, <span style="color:#a6e22e">i</span>, <span style="color:#a6e22e">j</span>)
+		}
+	}
+	<span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">swap</span>(<span style="color:#a6e22e">numbers</span>, <span style="color:#a6e22e">i</span>, <span style="color:#a6e22e">left</span>)
+
+	<span style="color:#a6e22e">quickSort</span>(<span style="color:#a6e22e">numbers</span>, <span style="color:#a6e22e">left</span>, <span style="color:#a6e22e">i</span><span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>, <span style="color:#a6e22e">c</span>)
+	<span style="color:#a6e22e">quickSort</span>(<span style="color:#a6e22e">numbers</span>, <span style="color:#a6e22e">i</span><span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>, <span style="color:#a6e22e">right</span>, <span style="color:#a6e22e">c</span>)
+}
+
+<span style="color:#66d9ef">func</span> <span style="color:#a6e22e">benchmark</span>(<span style="color:#a6e22e">n</span> <span style="color:#66d9ef">int</span>) (<span style="color:#f92672">*</span><span style="color:#a6e22e">Comparer</span>, <span style="color:#f92672">*</span><span style="color:#a6e22e">Comparer</span>, <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Duration</span>, <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Duration</span>) {
+	<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">start</span> <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Time</span>
+	<span style="color:#a6e22e">s</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">getRandomSlice</span>(<span style="color:#a6e22e">n</span>)
+
+	<span style="color:#a6e22e">qComparer</span> <span style="color:#f92672">:=</span> <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">Comparer</span>{}
+	<span style="color:#a6e22e">quickSlice</span> <span style="color:#f92672">:=</span> make([]<span style="color:#66d9ef">int</span>, len(<span style="color:#a6e22e">s</span>))
+	copy(<span style="color:#a6e22e">quickSlice</span>, <span style="color:#a6e22e">s</span>)
+
+	<span style="color:#a6e22e">start</span> = <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Now</span>()
+	<span style="color:#a6e22e">quickSort</span>(<span style="color:#a6e22e">quickSlice</span>, <span style="color:#ae81ff">0</span>, len(<span style="color:#a6e22e">quickSlice</span>)<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>, <span style="color:#a6e22e">qComparer</span>)
+	<span style="color:#a6e22e">quickTime</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Since</span>(<span style="color:#a6e22e">start</span>)
+
+	<span style="color:#a6e22e">hComparer</span> <span style="color:#f92672">:=</span> <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">Comparer</span>{}
+	<span style="color:#a6e22e">heapSlice</span> <span style="color:#f92672">:=</span> make([]<span style="color:#66d9ef">int</span>, len(<span style="color:#a6e22e">s</span>))
+	copy(<span style="color:#a6e22e">heapSlice</span>, <span style="color:#a6e22e">s</span>)
+
+	<span style="color:#a6e22e">start</span> = <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Now</span>()
+	<span style="color:#a6e22e">heapSort</span>(<span style="color:#a6e22e">heapSlice</span>, <span style="color:#a6e22e">hComparer</span>)
+	<span style="color:#a6e22e">heapTime</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Since</span>(<span style="color:#a6e22e">start</span>)
+
+	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">qComparer</span>, <span style="color:#a6e22e">hComparer</span>, <span style="color:#a6e22e">quickTime</span>, <span style="color:#a6e22e">heapTime</span>
+}
+
+<span style="color:#66d9ef">func</span> <span style="color:#a6e22e">printLine</span>(<span style="color:#a6e22e">title</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">list</span> <span style="color:#66d9ef">interface</span>{}) {
+	<span style="color:#a6e22e">v</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">reflect</span>.<span style="color:#a6e22e">ValueOf</span>(<span style="color:#a6e22e">list</span>)
+
+	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Printf</span>(<span style="color:#e6db74">&#34;%v\t&#34;</span>, <span style="color:#a6e22e">title</span>)
+	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">i</span> &lt; <span style="color:#a6e22e">v</span>.<span style="color:#a6e22e">Len</span>()<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>; <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span> {
+		<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Printf</span>(<span style="color:#e6db74">&#34;%v\t&#34;</span>, <span style="color:#a6e22e">v</span>.<span style="color:#a6e22e">Index</span>(<span style="color:#a6e22e">i</span>))
+	}
+	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Printf</span>(<span style="color:#e6db74">&#34;%v\n&#34;</span>, <span style="color:#a6e22e">v</span>.<span style="color:#a6e22e">Index</span>(<span style="color:#a6e22e">v</span>.<span style="color:#a6e22e">Len</span>()<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>))
+}
+
+<span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>() {
+	<span style="color:#a6e22e">test</span> <span style="color:#f92672">:=</span> []<span style="color:#66d9ef">int</span>{<span style="color:#ae81ff">1000</span>, <span style="color:#ae81ff">10000</span>, <span style="color:#ae81ff">100000</span>, <span style="color:#ae81ff">1000000</span>}
+
+	<span style="color:#a6e22e">quickSwapCount</span> <span style="color:#f92672">:=</span> make([]<span style="color:#66d9ef">int</span>, len(<span style="color:#a6e22e">test</span>))
+	<span style="color:#a6e22e">quickCompareCount</span> <span style="color:#f92672">:=</span> make([]<span style="color:#66d9ef">int</span>, len(<span style="color:#a6e22e">test</span>))
+	<span style="color:#a6e22e">quickTime</span> <span style="color:#f92672">:=</span> make([]<span style="color:#66d9ef">int64</span>, len(<span style="color:#a6e22e">test</span>))
+
+	<span style="color:#a6e22e">heapSwapCount</span> <span style="color:#f92672">:=</span> make([]<span style="color:#66d9ef">int</span>, len(<span style="color:#a6e22e">test</span>))
+	<span style="color:#a6e22e">heapCompareCount</span> <span style="color:#f92672">:=</span> make([]<span style="color:#66d9ef">int</span>, len(<span style="color:#a6e22e">test</span>))
+	<span style="color:#a6e22e">heapTime</span> <span style="color:#f92672">:=</span> make([]<span style="color:#66d9ef">int64</span>, len(<span style="color:#a6e22e">test</span>))
+
+	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">j</span>, <span style="color:#a6e22e">t</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">test</span> {
+		<span style="color:#a6e22e">qs</span>, <span style="color:#a6e22e">qc</span>, <span style="color:#a6e22e">hs</span>, <span style="color:#a6e22e">hc</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>
+		<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">qt</span>, <span style="color:#a6e22e">ht</span> <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Duration</span>
+
+		<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">i</span> &lt; <span style="color:#ae81ff">10</span>; <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span> {
+			<span style="color:#a6e22e">q</span>, <span style="color:#a6e22e">h</span>, <span style="color:#a6e22e">qTime</span>, <span style="color:#a6e22e">hTime</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">benchmark</span>(<span style="color:#a6e22e">t</span>)
+
+			<span style="color:#a6e22e">qs</span> <span style="color:#f92672">+=</span> <span style="color:#a6e22e">q</span>.<span style="color:#a6e22e">swapCount</span>
+			<span style="color:#a6e22e">qc</span> <span style="color:#f92672">+=</span> <span style="color:#a6e22e">q</span>.<span style="color:#a6e22e">compareCount</span>
+			<span style="color:#a6e22e">qt</span> <span style="color:#f92672">+=</span> <span style="color:#a6e22e">qTime</span>
+
+			<span style="color:#a6e22e">hs</span> <span style="color:#f92672">+=</span> <span style="color:#a6e22e">h</span>.<span style="color:#a6e22e">swapCount</span>
+			<span style="color:#a6e22e">hc</span> <span style="color:#f92672">+=</span> <span style="color:#a6e22e">h</span>.<span style="color:#a6e22e">compareCount</span>
+			<span style="color:#a6e22e">ht</span> <span style="color:#f92672">+=</span> <span style="color:#a6e22e">hTime</span>
+		}
+		<span style="color:#a6e22e">quickSwapCount</span>[<span style="color:#a6e22e">j</span>] = <span style="color:#a6e22e">qs</span> <span style="color:#f92672">/</span> <span style="color:#ae81ff">10</span>
+		<span style="color:#a6e22e">quickCompareCount</span>[<span style="color:#a6e22e">j</span>] = <span style="color:#a6e22e">qc</span> <span style="color:#f92672">/</span> <span style="color:#ae81ff">10</span>
+		<span style="color:#a6e22e">quickTime</span>[<span style="color:#a6e22e">j</span>] = <span style="color:#a6e22e">qt</span>.<span style="color:#a6e22e">Microseconds</span>() <span style="color:#f92672">/</span> <span style="color:#ae81ff">10</span>
+
+		<span style="color:#a6e22e">heapSwapCount</span>[<span style="color:#a6e22e">j</span>] = <span style="color:#a6e22e">hs</span> <span style="color:#f92672">/</span> <span style="color:#ae81ff">10</span>
+		<span style="color:#a6e22e">heapCompareCount</span>[<span style="color:#a6e22e">j</span>] = <span style="color:#a6e22e">hc</span> <span style="color:#f92672">/</span> <span style="color:#ae81ff">10</span>
+		<span style="color:#a6e22e">heapTime</span>[<span style="color:#a6e22e">j</span>] = <span style="color:#a6e22e">ht</span>.<span style="color:#a6e22e">Microseconds</span>() <span style="color:#f92672">/</span> <span style="color:#ae81ff">10</span>
+	}
+
+	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#e6db74">&#34;Swap&#34;</span>)
+	<span style="color:#a6e22e">printLine</span>(<span style="color:#e6db74">&#34;#&#34;</span>, <span style="color:#a6e22e">test</span>)
+	<span style="color:#a6e22e">printLine</span>(<span style="color:#e6db74">&#34;Quick&#34;</span>, <span style="color:#a6e22e">quickSwapCount</span>)
+	<span style="color:#a6e22e">printLine</span>(<span style="color:#e6db74">&#34;Heap&#34;</span>, <span style="color:#a6e22e">heapSwapCount</span>)
+	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>()
+
+	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#e6db74">&#34;Comparison&#34;</span>)
+	<span style="color:#a6e22e">printLine</span>(<span style="color:#e6db74">&#34;#&#34;</span>, <span style="color:#a6e22e">test</span>)
+	<span style="color:#a6e22e">printLine</span>(<span style="color:#e6db74">&#34;Quick&#34;</span>, <span style="color:#a6e22e">quickCompareCount</span>)
+	<span style="color:#a6e22e">printLine</span>(<span style="color:#e6db74">&#34;Heap&#34;</span>, <span style="color:#a6e22e">heapCompareCount</span>)
+	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>()
+
+	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#e6db74">&#34;Running time&#34;</span>)
+	<span style="color:#a6e22e">printLine</span>(<span style="color:#e6db74">&#34;#&#34;</span>, <span style="color:#a6e22e">test</span>)
+	<span style="color:#a6e22e">printLine</span>(<span style="color:#e6db74">&#34;Quick&#34;</span>, <span style="color:#a6e22e">quickTime</span>)
+	<span style="color:#a6e22e">printLine</span>(<span style="color:#e6db74">&#34;Heap&#34;</span>, <span style="color:#a6e22e">heapTime</span>)
+}</code></pre></div>
+
+    </section>
+
+
+  <footer class="post-footer">
+
+
+    
+
+
+
+
+
+
+
+
+<figure class="author-image">
+    <a class="img" href="https://chihkaiyu.github.io" style="background-image: url(/images/profile.png)"><span class="hidden">Chih Kai Yu's Picture</span></a>
+</figure>
+
+
+<section class="author">
+  <h4><a href="https://chihkaiyu.github.io">Chih Kai Yu</a></h4>
+  
+  <p>Software Engineer</p>
+  
+  <div class="author-meta">
+    <span class="author-location icon-location">Taipei, Taiwan</span>
+    <span class="author-link icon-link"><a href="https://chihkaiyu.github.io">https://chihkaiyu.github.io</a></span>
+  </div>
+</section>
+
+
+
+
+    
+<section class="share">
+  <h4>Share this post</h4>
+  <a class="icon-twitter" style="font-size: 1.4em" href="https://twitter.com/share?text=Why%20Quick%20Sort%20Is%20Faster%20than%20Heap%20Sort%3f&nbsp;-&nbsp;No%20Idiots%20Allowed%20Here&amp;url=https%3a%2f%2fchihkaiyu.github.io%2fpost%2fwhy-quick-sort-is-faster-than-heap-sort%2f"
+      onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+      <span class="hidden">Twitter</span>
+  </a>
+  <a class="icon-facebook" style="font-size: 1.4em" href="https://www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fchihkaiyu.github.io%2fpost%2fwhy-quick-sort-is-faster-than-heap-sort%2f"
+      onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+      <span class="hidden">Facebook</span>
+  </a>
+  <a class="icon-pinterest" style="font-size: 1.4em" href="http://pinterest.com/pin/create/button/?url=https%3a%2f%2fchihkaiyu.github.io%2fpost%2fwhy-quick-sort-is-faster-than-heap-sort%2f&amp;description=Why%20Quick%20Sort%20Is%20Faster%20than%20Heap%20Sort%3f"
+      onclick="window.open(this.href, 'pinterest-share','width=580,height=296');return false;">
+      <span class="hidden">Pinterest</span>
+  </a>
+  <a class="icon-google-plus" style="font-size: 1.4em" href="https://plus.google.com/share?url=https%3a%2f%2fchihkaiyu.github.io%2fpost%2fwhy-quick-sort-is-faster-than-heap-sort%2f"
+     onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+      <span class="hidden">Google+</span>
+  </a>
+</section>
+
+
+
+    
+
+<div id="disqus_thread"></div>
+<script>
+
+
+
+
+var disqus_config = function () {
+this.page.url = "https:\/\/chihkaiyu.github.io\/post\/why-quick-sort-is-faster-than-heap-sort\/";  
+this.page.identifier = "https:\/\/chihkaiyu.github.io\/post\/why-quick-sort-is-faster-than-heap-sort\/"; 
+};
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://chihkaiyu.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+
+
+
+
+
+
+  </footer>
+</article>
+
+</main>
+
+
+  <aside class="read-next">
+  
+  
+      <a class="read-next-story prev" style="background-image: url(/content/images/2019/07/DSC05572.jpg)" href="https://chihkaiyu.github.io/post/golang-memory-management/">
+          <section class="post">
+              <h2>Golang Memory Management (based on 1.12.5)</h2>
+          </section>
+      </a>
+  
+</aside>
+
+
+
+    <footer class="site-footer clearfix">
+        <section class="copyright"><a href="">No Idiots Allowed Here</a> </section>
+        
+        <section class="poweredby">Proudly generated by <a class="icon-hugo" href="http://gohugo.io">HUGO</a>, with <a class="icon-theme" href="https://github.com/vjeantet/hugo-theme-casper">Casper</a> theme</section>
+        
+    </footer>
+    </div>
+    <script type="text/javascript" src="https://chihkaiyu.github.io/js/jquery.js"></script>
+    <script type="text/javascript" src="https://chihkaiyu.github.io/js/jquery.fitvids.js"></script>
+    <script type="text/javascript" src="https://chihkaiyu.github.io/js/index.js"></script>
+    
+</body>
+</html>
+

@@ -6,10 +6,19 @@
     <description>Recent content in Tags on No Idiots Allowed Here</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-TW</language>
-    <lastBuildDate>Thu, 07 Mar 2019 00:24:00 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 02 Oct 2019 01:10:00 +0800</lastBuildDate>
     
 	<atom:link href="https://chihkaiyu.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Algorithm</title>
+      <link>https://chihkaiyu.github.io/tags/algorithm/</link>
+      <pubDate>Wed, 02 Oct 2019 01:10:00 +0800</pubDate>
+      
+      <guid>https://chihkaiyu.github.io/tags/algorithm/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>Digest</title>

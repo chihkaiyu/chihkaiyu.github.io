@@ -17,9 +17,10 @@
       <pubDate>Mon, 14 Jan 2019 22:32:07 +0800</pubDate>
       
       <guid>https://chihkaiyu.github.io/page/about/</guid>
-      <description>I&amp;rsquo;m a software engineer who suffers from Ornithophobia. I hate achieving something in a stupid way so I&amp;rsquo;m also a perfectionist who have minor Mysophobia.
-I work at a company which mainly focus on digital advertising. Yep, the things you hate when you&amp;rsquo;re browing the internet. This is my first job and I&amp;rsquo;ve been working here since March 2017.
-Currently I&amp;rsquo;m working on building a new DSP (Demand Side Platform).</description>
+      <description>I&amp;rsquo;m a Taiwanese so there will be some Chinese articles if I don&amp;rsquo;t know how to properly express them in English. Feel free to leave message or email me via kai.chihkaiyu[at]gmail.com.
+Here are some skill keywords I have:
+ Environment
+ Linux Docker  Language  Python Golang  Services:  MySQL Kafka GitLab GitLab CI Prometheus Jenkins Elasticsearch OpenTSDB   </description>
     </item>
     
     <item>
@@ -29,7 +30,7 @@ Currently I&amp;rsquo;m working on building a new DSP (Demand Side Platform).</d
       
       <guid>https://chihkaiyu.github.io/page/tags/</guid>
       <description>Select the tag you want to read:
- Docker GitLab Digest DevOps Golang  </description>
+ Docker GitLab Digest DevOps Golang Algorithm  </description>
     </item>
     
   </channel>

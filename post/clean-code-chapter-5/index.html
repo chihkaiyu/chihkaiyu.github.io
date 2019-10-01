@@ -68,7 +68,7 @@
       
       
     
-    <meta name="generator" content="Hugo 0.53" />
+    <meta name="generator" content="Hugo 0.54.0" />
 
     <link rel="canonical" href="https://chihkaiyu.github.io/post/clean-code-chapter-5/" />
 
@@ -293,104 +293,104 @@
 <p>在閱讀本書前，我自己 coding 時便常常做這件事，例如底下程式碼：</p>
 
 <pre><code class="language-go">func main() {
-    err := initConfig()
-    if err != nil {
-        log.Fatal(err)
-    }
+	err := initConfig()
+	if err != nil {
+		log.Fatal(err)
+	}
 
-    err = initDatabaseConnection()
-    if err != nil {
-        log.Fatal(err)
-    }
+	err = initDatabaseConnection()
+	if err != nil {
+		log.Fatal(err)
+	}
 
-    err = initDatabase()
-    if err != nil {
-        log.Fatal(err)
-    }
+	err = initDatabase()
+	if err != nil {
+		log.Fatal(err)
+	}
 
-    log.Info(&quot;Updating users from Slack and GitLab...&quot;)
-    err = updateAllUsers()
-    if err != nil {
-        log.Error(err)
-    }
+	log.Info(&quot;Updating users from Slack and GitLab...&quot;)
+	err = updateAllUsers()
+	if err != nil {
+		log.Error(err)
+	}
 
-    log.Info(&quot;Updating GitLab Projects...&quot;)
-    err = updateAllGitLabProject()
-    if err != nil {
-        log.Error(err)
-    }
+	log.Info(&quot;Updating GitLab Projects...&quot;)
+	err = updateAllGitLabProject()
+	if err != nil {
+		log.Error(err)
+	}
 
-    log.Info(&quot;Starting cronjob scheduler...&quot;)
-    err = startCronjob()
-    if err != nil {
-        log.Error(err)
-    }
+	log.Info(&quot;Starting cronjob scheduler...&quot;)
+	err = startCronjob()
+	if err != nil {
+		log.Error(err)
+	}
 
-    log.Info(&quot;Starting server...&quot;)
-    router := gin.Default()
-    router.POST(&quot;/&quot;, handler)
+	log.Info(&quot;Starting server...&quot;)
+	router := gin.Default()
+	router.POST(&quot;/&quot;, handler)
 
-    // user related routers
-    router.GET(&quot;/user/:email&quot;, getUser)
-    router.PUT(&quot;/user/:email&quot;, updateUser)
+	// user related routers
+	router.GET(&quot;/user/:email&quot;, getUser)
+	router.PUT(&quot;/user/:email&quot;, updateUser)
 
-    // project related routers
-    router.GET(&quot;/project/:namespace/*path&quot;, getProject)
-    router.PUT(&quot;/project/:namespace/*path&quot;, updateProject)
+	// project related routers
+	router.GET(&quot;/project/:namespace/*path&quot;, getProject)
+	router.PUT(&quot;/project/:namespace/*path&quot;, updateProject)
 
-    // update all users or projects
-    router.POST(&quot;/users&quot;, allUser)
-    router.POST(&quot;/projects&quot;, allProject)
+	// update all users or projects
+	router.POST(&quot;/users&quot;, allUser)
+	router.POST(&quot;/projects&quot;, allProject)
 
-    router.Run()
-    // TODO: close database connection
+	router.Run()
+	// TODO: close database connection
 }
 </code></pre>
 
 <p>此函式是我用 Golang 寫的一個 web server，在準備接受 request 前得先做一連串的事情，每件事情中間都會有一行空行隔開。若是拿掉空行，便如下：</p>
 
 <pre><code class="language-go">func main() {
-    err := initConfig()
-    if err != nil {
-        log.Fatal(err)
-    }
-    err = initDatabaseConnection()
-    if err != nil {
-        log.Fatal(err)
-    }
-    err = initDatabase()
-    if err != nil {
-        log.Fatal(err)
-    }
-    log.Info(&quot;Updating users from Slack and GitLab...&quot;)
-    err = updateAllUsers()
-    if err != nil {
-        log.Error(err)
-    }
-    log.Info(&quot;Updating GitLab Projects...&quot;)
-    err = updateAllGitLabProject()
-    if err != nil {
-        log.Error(err)
-    }
-    log.Info(&quot;Starting cronjob scheduler...&quot;)
-    err = startCronjob()
-    if err != nil {
-        log.Error(err)
-    }
-    log.Info(&quot;Starting server...&quot;)
-    router := gin.Default()
-    router.POST(&quot;/&quot;, handler)
-    // user related routers
-    router.GET(&quot;/user/:email&quot;, getUser)
-    router.PUT(&quot;/user/:email&quot;, updateUser)
-    // project related routers
-    router.GET(&quot;/project/:namespace/*path&quot;, getProject)
-    router.PUT(&quot;/project/:namespace/*path&quot;, updateProject)
-    // update all users or projects
-    router.POST(&quot;/users&quot;, allUser)
-    router.POST(&quot;/projects&quot;, allProject)
-    router.Run()
-    // TODO: close database connection
+	err := initConfig()
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = initDatabaseConnection()
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = initDatabase()
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Info(&quot;Updating users from Slack and GitLab...&quot;)
+	err = updateAllUsers()
+	if err != nil {
+		log.Error(err)
+	}
+	log.Info(&quot;Updating GitLab Projects...&quot;)
+	err = updateAllGitLabProject()
+	if err != nil {
+		log.Error(err)
+	}
+	log.Info(&quot;Starting cronjob scheduler...&quot;)
+	err = startCronjob()
+	if err != nil {
+		log.Error(err)
+	}
+	log.Info(&quot;Starting server...&quot;)
+	router := gin.Default()
+	router.POST(&quot;/&quot;, handler)
+	// user related routers
+	router.GET(&quot;/user/:email&quot;, getUser)
+	router.PUT(&quot;/user/:email&quot;, updateUser)
+	// project related routers
+	router.GET(&quot;/project/:namespace/*path&quot;, getProject)
+	router.PUT(&quot;/project/:namespace/*path&quot;, updateProject)
+	// update all users or projects
+	router.POST(&quot;/users&quot;, allUser)
+	router.POST(&quot;/projects&quot;, allProject)
+	router.Run()
+	// TODO: close database connection
 }
 </code></pre>
 
@@ -484,23 +484,23 @@ Python PEP8 的建議長度是 79 個字元，但我認為這根本辦不到。�
 <p>作者以底下程式碼作為例子 (我改寫為 Golang 且內容為我自己的 side project)：</p>
 
 <pre><code class="language-go">type config struct {
-    slackToken   string
-    slackURL     string
-    slackWebhook string
-    gitlabToken  string
-    gitlabURL    string
-    dbFile       string
-    token        string
+	slackToken   string
+	slackURL     string
+	slackWebhook string
+	gitlabToken  string
+	gitlabURL    string
+	dbFile       string
+	token        string
 }
 
 cfg := config{
-    slackToken:   slackToken,
-    slackURL:     &quot;https://slack.com/api&quot;,
-    slackWebhook: webhook,
-    gitlabToken:  gitlabToken,
-    gitlabURL:    gitlabURL,
-    dbFile:       dbFile,
-    token:        token,
+	slackToken:   slackToken,
+	slackURL:     &quot;https://slack.com/api&quot;,
+	slackWebhook: webhook,
+	gitlabToken:  gitlabToken,
+	gitlabURL:    gitlabURL,
+	dbFile:       dbFile,
+	token:        token,
 }
 </code></pre>
 
@@ -519,13 +519,13 @@ cfg := config{
 <p>底下程式碼顯示沒有使用縮排是多麼嚇人的一件事：</p>
 
 <pre><code class="language-go">type config struct {
-    slackToken   string
-    slackURL     string
-    slackWebhook string
-    gitlabToken  string
-    gitlabURL    string
-    dbFile       string
-    token        string
+	slackToken   string
+	slackURL     string
+	slackWebhook string
+	gitlabToken  string
+	gitlabURL    string
+	dbFile       string
+	token        string
 }
 
 var cfg config

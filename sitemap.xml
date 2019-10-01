@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://chihkaiyu.github.io/post/why-quick-sort-is-faster-than-heap-sort/</loc>
+    <lastmod>2019-10-02T01:10:00+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://chihkaiyu.github.io/post/golang-memory-management/</loc>
     <lastmod>2019-07-02T00:03:00+08:00</lastmod>
   </url>
@@ -68,6 +73,12 @@
   </url>
   
   <url>
+    <loc>https://chihkaiyu.github.io/tags/algorithm/</loc>
+    <lastmod>2019-10-02T01:10:00+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>https://chihkaiyu.github.io/categories/</loc>
     <priority>0</priority>
   </url>
@@ -98,7 +109,7 @@
   
   <url>
     <loc>https://chihkaiyu.github.io/</loc>
-    <lastmod>2019-07-02T00:03:00+08:00</lastmod>
+    <lastmod>2019-10-02T01:10:00+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -110,7 +121,7 @@
   
   <url>
     <loc>https://chihkaiyu.github.io/post/</loc>
-    <lastmod>2019-07-02T00:03:00+08:00</lastmod>
+    <lastmod>2019-10-02T01:10:00+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -122,7 +133,7 @@
   
   <url>
     <loc>https://chihkaiyu.github.io/tags/</loc>
-    <lastmod>2019-03-07T00:24:00+08:00</lastmod>
+    <lastmod>2019-10-02T01:10:00+08:00</lastmod>
     <priority>0</priority>
   </url>
   

@@ -6,10 +6,22 @@
     <description>Recent content on No Idiots Allowed Here</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-TW</language>
-    <lastBuildDate>Tue, 02 Jul 2019 00:03:00 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 02 Oct 2019 01:10:00 +0800</lastBuildDate>
     
 	<atom:link href="https://chihkaiyu.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Why Quick Sort Is Faster than Heap Sort?</title>
+      <link>https://chihkaiyu.github.io/post/why-quick-sort-is-faster-than-heap-sort/</link>
+      <pubDate>Wed, 02 Oct 2019 01:10:00 +0800</pubDate>
+      
+      <guid>https://chihkaiyu.github.io/post/why-quick-sort-is-faster-than-heap-sort/</guid>
+      <description>Why Quick Sort? I was reviewing sorting algorithm for my interview. The question just popped up in my mind when I was peeking the cheat sheet.
+[1]
+You can see the best, average and worst time complexity of heap sort are all O(n logn) but it&amp;rsquo;s O(n^2) for worst of quick sort.
+Then why do we always use quick sort? Since quick sort can&amp;rsquo;t beat heap sort in any cases, not even in space complexity.</description>
+    </item>
     
     <item>
       <title>Golang Memory Management (based on 1.12.5)</title>
@@ -59,9 +71,10 @@ Concepts Data Model  每一條 time series 由 metric name 及一組 labels 來�
       <pubDate>Mon, 14 Jan 2019 22:32:07 +0800</pubDate>
       
       <guid>https://chihkaiyu.github.io/page/about/</guid>
-      <description>I&amp;rsquo;m a software engineer who suffers from Ornithophobia. I hate achieving something in a stupid way so I&amp;rsquo;m also a perfectionist who have minor Mysophobia.
-I work at a company which mainly focus on digital advertising. Yep, the things you hate when you&amp;rsquo;re browing the internet. This is my first job and I&amp;rsquo;ve been working here since March 2017.
-Currently I&amp;rsquo;m working on building a new DSP (Demand Side Platform).</description>
+      <description>I&amp;rsquo;m a Taiwanese so there will be some Chinese articles if I don&amp;rsquo;t know how to properly express them in English. Feel free to leave message or email me via kai.chihkaiyu[at]gmail.com.
+Here are some skill keywords I have:
+ Environment
+ Linux Docker  Language  Python Golang  Services:  MySQL Kafka GitLab GitLab CI Prometheus Jenkins Elasticsearch OpenTSDB   </description>
     </item>
     
     <item>
@@ -172,7 +185,7 @@ Why Why would I bother to migrate it? There are several reasons and here are the
       
       <guid>https://chihkaiyu.github.io/page/tags/</guid>
       <description>Select the tag you want to read:
- Docker GitLab Digest DevOps Golang  </description>
+ Docker GitLab Digest DevOps Golang Algorithm  </description>
     </item>
     
     <item>

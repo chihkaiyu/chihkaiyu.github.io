@@ -68,7 +68,7 @@
       
       
     
-    <meta name="generator" content="Hugo 0.53" />
+    <meta name="generator" content="Hugo 0.54.0" />
 
     <link rel="canonical" href="https://chihkaiyu.github.io/post/chapter-vi-big-o/" />
 
@@ -481,18 +481,18 @@ log2 N = k -&gt; 2^k = N
 <p>下列 code 會印出一組 string 所有的排列組合</p>
 
 <pre><code class="language-go">func permutation(str, prefix string) {
-    if len(str) == 0 {
-        fmt.Println(prefix)
-    } else {
-        for i := 0; i &lt; len(str); i++ {
-            rem := str[0:i] + str[i+1:]
-            permutation(rem, prefix+string(str[i]))
-        }
-    }
+	if len(str) == 0 {
+		fmt.Println(prefix)
+	} else {
+		for i := 0; i &lt; len(str); i++ {
+			rem := str[0:i] + str[i+1:]
+			permutation(rem, prefix+string(str[i]))
+		}
+	}
 }
 
 func main() {
-    permutation(&quot;abc&quot;, &quot;&quot;)
+	permutation(&quot;abc&quot;, &quot;&quot;)
 }
 </code></pre>
 
