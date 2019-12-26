@@ -68,7 +68,7 @@
       
       
     
-    <meta name="generator" content="Hugo 0.54.0" />
+    <meta name="generator" content="Hugo 0.59.1" />
 
     <link rel="canonical" href="https://chihkaiyu.github.io/post/chapter-vi-big-o/" />
 
@@ -81,21 +81,21 @@
     "@type": "Article",
     "publisher": {
         "@type": "Organization",
-        "name": ,
-        "logo": https://chihkaiyu.github.ioimages/profile.png
+        "name":  null ,
+        "logo": "https://chihkaiyu.github.ioimages/profile.png"
     },
     "author": {
         "@type": "Person",
-        "name": ,
+        "name":  null ,
         
         "image": {
             "@type": "ImageObject",
-            "url": https://chihkaiyu.github.ioimages/profile.png,
+            "url": "https://chihkaiyu.github.ioimages/profile.png",
             "width": 250,
             "height": 250
         }, 
         
-        "url": https://chihkaiyu.github.io,
+        "url": "https://chihkaiyu.github.io",
         "sameAs": [
             
             
@@ -106,33 +106,33 @@
              
             
         ],
-        "description": Software Engineer
+        "description": "Software Engineer"
         
     },
-    "headline": Chapter VI - Big O,
-    "name": Chapter VI - Big O,
-    "wordCount": 1199,
+    "headline": "Chapter VI - Big O",
+    "name": "Chapter VI - Big O",
+    "wordCount":  1199 ,
     "timeRequired": "PT6M",
     "inLanguage": {
       "@type": "Language",
-      "alternateName": en
+      "alternateName": "en"
     },
-    "url": https://chihkaiyu.github.io/post/chapter-vi-big-o/,
-    "datePublished": 2019-03-07T00:24Z,
-    "dateModified": 2019-03-07T00:24Z,
+    "url": "https://chihkaiyu.github.io/post/chapter-vi-big-o/",
+    "datePublished": "2019-03-07T00:24Z",
+    "dateModified": "2019-03-07T00:24Z",
     
     "image": {
         "@type": "ImageObject",
-        "url": https://chihkaiyu.github.io/content/images/2019/03/DSC05004.jpg,
+        "url": "https://chihkaiyu.github.io/content/images/2019/03/DSC05004.jpg",
         "width": 3000,
         "height": 1445
     },
     
-    "keywords": digest,
-    "description": ,
+    "keywords": "digest",
+    "description": "",
     "mainEntityOfPage": {
         "@type": "WebPage",
-        "@id": https://chihkaiyu.github.io/post/chapter-vi-big-o/
+        "@id": "https://chihkaiyu.github.io/post/chapter-vi-big-o/"
     }
 }
     </script>
@@ -326,28 +326,26 @@ func pairSum(a, b int) int {
 如下列兩段 code：</p>
 
 <ul>
-<li>Add the Runtimes: O(A + B)</li>
-</ul>
+<li><p>Add the Runtimes: O(A + B)</p>
 
 <pre><code class="language-go">for _, a := range arrA {
-    fmt.Println(a)
+fmt.Println(a)
 }
 
 for _, b := range arrB {
-    fmt.Println(b)
+fmt.Println(b)
 }
-</code></pre>
+</code></pre></li>
 
-<ul>
-<li>Multiply the Runtimes: (A*B)</li>
-</ul>
+<li><p>Multiply the Runtimes: (A*B)</p>
 
 <pre><code class="language-go">for _, a := range arrA {
-    for _, b := range arrB {
-        fmt.Println(a + &quot;,&quot; + b)
-    }
+for _, b := range arrB {
+    fmt.Println(a + &quot;,&quot; + b)
 }
-</code></pre>
+}
+</code></pre></li>
+</ul>
 
 <p>可得知，你的演算法若是先執行「這個」，完成後再執行「那個」那你就相加；反之，當你每執行一次「這個」的時候，都要執行「那個」，那你就得相乘。</p>
 

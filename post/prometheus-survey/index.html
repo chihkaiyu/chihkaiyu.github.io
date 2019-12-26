@@ -71,7 +71,7 @@ Target 要被監控的目標，會以網頁方式將 metrics 以固定格式呈�
       
       
     
-    <meta name="generator" content="Hugo 0.54.0" />
+    <meta name="generator" content="Hugo 0.59.1" />
 
     <link rel="canonical" href="https://chihkaiyu.github.io/post/prometheus-survey/" />
 
@@ -84,21 +84,21 @@ Target 要被監控的目標，會以網頁方式將 metrics 以固定格式呈�
     "@type": "Article",
     "publisher": {
         "@type": "Organization",
-        "name": ,
-        "logo": https://chihkaiyu.github.ioimages/profile.png
+        "name":  null ,
+        "logo": "https://chihkaiyu.github.ioimages/profile.png"
     },
     "author": {
         "@type": "Person",
-        "name": ,
+        "name":  null ,
         
         "image": {
             "@type": "ImageObject",
-            "url": https://chihkaiyu.github.ioimages/profile.png,
+            "url": "https://chihkaiyu.github.ioimages/profile.png",
             "width": 250,
             "height": 250
         }, 
         
-        "url": https://chihkaiyu.github.io,
+        "url": "https://chihkaiyu.github.io",
         "sameAs": [
             
             
@@ -109,33 +109,33 @@ Target 要被監控的目標，會以網頁方式將 metrics 以固定格式呈�
              
             
         ],
-        "description": Software Engineer
+        "description": "Software Engineer"
         
     },
-    "headline": Prometheus Survey,
-    "name": Prometheus Survey,
-    "wordCount": 2415,
+    "headline": "Prometheus Survey",
+    "name": "Prometheus Survey",
+    "wordCount":  2415 ,
     "timeRequired": "PT12M",
     "inLanguage": {
       "@type": "Language",
-      "alternateName": en
+      "alternateName": "en"
     },
-    "url": https://chihkaiyu.github.io/post/prometheus-survey/,
-    "datePublished": 2019-01-15T22:16Z,
-    "dateModified": 2019-01-15T22:16Z,
+    "url": "https://chihkaiyu.github.io/post/prometheus-survey/",
+    "datePublished": "2019-01-15T22:16Z",
+    "dateModified": "2019-01-15T22:16Z",
     
     "image": {
         "@type": "ImageObject",
-        "url": https://chihkaiyu.github.io/content/images/2019/01/DSC04490.jpg,
+        "url": "https://chihkaiyu.github.io/content/images/2019/01/DSC04490.jpg",
         "width": 3000,
         "height": 1445
     },
     
-    "keywords": sre, digest,
-    "description": ,
+    "keywords": "sre, digest",
+    "description": "",
     "mainEntityOfPage": {
         "@type": "WebPage",
-        "@id": https://chihkaiyu.github.io/post/prometheus-survey/
+        "@id": "https://chihkaiyu.github.io/post/prometheus-survey/"
     }
 }
     </script>
@@ -700,34 +700,34 @@ Target 要被監控的目標，會以網頁方式將 metrics 以固定格式呈�
 <h2 id="configuration">Configuration</h2>
 
 <ul>
-<li><a href="https://prometheus.io/webtools/alerting/routing-tree-editor/">Routing tree editor</a></li>
-</ul>
+<li><p><a href="https://prometheus.io/webtools/alerting/routing-tree-editor/">Routing tree editor</a></p>
 
 <pre><code># The root route with all parameters, which are inherited by the child
 # routes if they are not overwritten.
 route:
-  receiver: 'default-receiver'
-  group_wait: 30s
-  group_interval: 5m
-  repeat_interval: 4h
-  group_by: [cluster, alertname]
-  # All alerts that do not match the following child routes
-  # will remain at the root node and be dispatched to 'default-receiver'.
-  routes:
-  # All alerts with service=mysql or service=cassandra
-  # are dispatched to the database pager.
-  - receiver: 'database-pager'
-    group_wait: 10s
-    match_re:
-      service: mysql|cassandra
-  # All alerts with the team=frontend label match this sub-route.
-  # They are grouped by product and environment rather than cluster
-  # and alertname.
-  - receiver: 'frontend-pager'
-    group_by: [product, environment]
-    match:
-      team: frontend
-</code></pre>
+receiver: 'default-receiver'
+group_wait: 30s
+group_interval: 5m
+repeat_interval: 4h
+group_by: [cluster, alertname]
+# All alerts that do not match the following child routes
+# will remain at the root node and be dispatched to 'default-receiver'.
+routes:
+# All alerts with service=mysql or service=cassandra
+# are dispatched to the database pager.
+- receiver: 'database-pager'
+group_wait: 10s
+match_re:
+  service: mysql|cassandra
+# All alerts with the team=frontend label match this sub-route.
+# They are grouped by product and environment rather than cluster
+# and alertname.
+- receiver: 'frontend-pager'
+group_by: [product, environment]
+match:
+  team: frontend
+</code></pre></li>
+</ul>
 
 <h2 id="alerting-flow">Alerting Flow</h2>
 
@@ -939,23 +939,21 @@ route:
 <p><a href="https://en.wikipedia.org/wiki/Apdex">Apdex score</a></p>
 
 <ul>
-<li>如果你的 SLA 是 95% requests 都要在 300ms 內，你可以用底下 expression 來設定 alert：</li>
-</ul>
+<li><p>如果你的 SLA 是 95% requests 都要在 300ms 內，你可以用底下 expression 來設定 alert：</p>
 
 <pre><code>sum(rate(http_request_duration_seconds_bucket{le=&quot;0.3&quot;}[5m])) by (job)
 /
 sum(rate(http_request_duration_seconds_count[5m])) by (job)
-</code></pre>
+</code></pre></li>
 
-<ul>
-<li>也可以透過 Apdex score 來計算，除了目標外，會再設定一個可忍受的範圍 (通常是目標的 4 倍)：</li>
-</ul>
+<li><p>也可以透過 Apdex score 來計算，除了目標外，會再設定一個可忍受的範圍 (通常是目標的 4 倍)：</p>
 
 <pre><code>(sum(rate(http_request_duration_seconds_bucket{le=&quot;0.3&quot;}[5m])) by (job)
 +
 sum(rate(http_request_duration_seconds_bucket{le=&quot;1.2&quot;}[5m])) by (job))
 / 2 / sum(rate(http_request_duration_seconds_count[5m])) by (job)
-</code></pre>
+</code></pre></li>
+</ul>
 
 <h3 id="quantiles">Quantiles</h3>
 

@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Docker on No Idiots Allowed Here</title>
+    <title>docker on No Idiots Allowed Here</title>
     <link>https://chihkaiyu.github.io/tags/docker/</link>
-    <description>Recent content in Docker on No Idiots Allowed Here</description>
+    <description>Recent content in docker on No Idiots Allowed Here</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-TW</language>
     <lastBuildDate>Tue, 12 Jun 2018 17:15:55 +0800</lastBuildDate>
