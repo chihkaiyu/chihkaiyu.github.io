@@ -71,7 +71,7 @@ Why Why would I bother to migrate it? There are several reasons and here ar" />
       
       
     
-    <meta name="generator" content="Hugo 0.59.1" />
+    <meta name="generator" content="Hugo 0.53" />
 
     <link rel="canonical" href="https://chihkaiyu.github.io/post/migrate-sameersbn-docker-gitlab-to-gitlab-gitlab-ce/" />
 
@@ -84,21 +84,21 @@ Why Why would I bother to migrate it? There are several reasons and here ar" />
     "@type": "Article",
     "publisher": {
         "@type": "Organization",
-        "name":  null ,
-        "logo": "https://chihkaiyu.github.ioimages/profile.png"
+        "name": ,
+        "logo": https://chihkaiyu.github.ioimages/profile.png
     },
     "author": {
         "@type": "Person",
-        "name":  null ,
+        "name": ,
         
         "image": {
             "@type": "ImageObject",
-            "url": "https://chihkaiyu.github.ioimages/profile.png",
+            "url": https://chihkaiyu.github.ioimages/profile.png,
             "width": 250,
             "height": 250
         }, 
         
-        "url": "https://chihkaiyu.github.io",
+        "url": https://chihkaiyu.github.io,
         "sameAs": [
             
             
@@ -109,33 +109,33 @@ Why Why would I bother to migrate it? There are several reasons and here ar" />
              
             
         ],
-        "description": "Software Engineer"
+        "description": Software Engineer
         
     },
-    "headline": "Migrate sameersbn/docker-gitlab to gitlab/gitlab-ce",
-    "name": "Migrate sameersbn/docker-gitlab to gitlab/gitlab-ce",
-    "wordCount":  900 ,
+    "headline": Migrate sameersbn/docker-gitlab to gitlab/gitlab-ce,
+    "name": Migrate sameersbn/docker-gitlab to gitlab/gitlab-ce,
+    "wordCount": 900,
     "timeRequired": "PT5M",
     "inLanguage": {
       "@type": "Language",
-      "alternateName": "en"
+      "alternateName": en
     },
-    "url": "https://chihkaiyu.github.io/post/migrate-sameersbn-docker-gitlab-to-gitlab-gitlab-ce/",
-    "datePublished": "2018-06-12T17:15Z",
-    "dateModified": "2018-06-12T17:15Z",
+    "url": https://chihkaiyu.github.io/post/migrate-sameersbn-docker-gitlab-to-gitlab-gitlab-ce/,
+    "datePublished": 2018-06-12T17:15Z,
+    "dateModified": 2018-06-12T17:15Z,
     
     "image": {
         "@type": "ImageObject",
-        "url": "https://chihkaiyu.github.io/content/images/2018/06/DSC03526.jpg",
+        "url": https://chihkaiyu.github.io/content/images/2018/06/DSC03526.jpg,
         "width": 3000,
         "height": 1445
     },
     
-    "keywords": "docker, gitlab",
-    "description": "",
+    "keywords": docker, gitlab,
+    "description": ,
     "mainEntityOfPage": {
         "@type": "WebPage",
-        "@id": "https://chihkaiyu.github.io/post/migrate-sameersbn-docker-gitlab-to-gitlab-gitlab-ce/"
+        "@id": https://chihkaiyu.github.io/post/migrate-sameersbn-docker-gitlab-to-gitlab-gitlab-ce/
     }
 }
     </script>
@@ -299,22 +299,22 @@ Why Why would I bother to migrate it? There are several reasons and here ar" />
 
 <ol>
 <li>Create 3 folders first: <code>config, logs, data</code></li>
-
-<li><p>Execute the command and remember choose the same verion of GitLab:</p>
+<li>Execute the command and remember choose the same verion of GitLab:</li>
+</ol>
 
 <pre><code>docker run -it \
--p 10080:80 \
--p 10022:22 \
---name gitlab \
--v /PATH-TO-YOUR-FOLDER/config:/etc/gitlab:Z \
--v /PATH-TO-YOUR-FOLDER/logs:/var/log/gitlab:Z \
--v /PATH-TO-YOUR-FOLDER/data:/var/opt/gitlab:Z \
-gitlab/gitlab-ce:YOUR-GITLAB-VERSION
-</code></pre></li>
+    -p 10080:80 \
+    -p 10022:22 \
+    --name gitlab \
+    -v /PATH-TO-YOUR-FOLDER/config:/etc/gitlab:Z \
+    -v /PATH-TO-YOUR-FOLDER/logs:/var/log/gitlab:Z \
+    -v /PATH-TO-YOUR-FOLDER/data:/var/opt/gitlab:Z \
+    gitlab/gitlab-ce:YOUR-GITLAB-VERSION
+</code></pre>
 
-<li><p>Wait until all components have been initialized. You can hit the home page of GitLab via <code>http://YOUR-IP:10080/</code> to check. When you see the page asks you to set new password for <code>root</code>, it means all components are done.</p></li>
-
-<li><p>Copy the backup file to <code>/var/opt/gitlab/backups/</code> in official GitLab container</p></li>
+<ol>
+<li>Wait until all components have been initialized. You can hit the home page of GitLab via <code>http://YOUR-IP:10080/</code> to check. When you see the page asks you to set new password for <code>root</code>, it means all components are done.</li>
+<li>Copy the backup file to <code>/var/opt/gitlab/backups/</code> in official GitLab container</li>
 </ol>
 
 <p>Reference: <a href="https://docs.gitlab.com/omnibus/docker/">https://docs.gitlab.com/omnibus/docker/</a></p>
