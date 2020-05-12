@@ -1,327 +1,105 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-TW" lang="zh-TW">
 <head>
+  <link href="https://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="generator" content="Hugo 0.70.0" />
 
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    
-    
-        
-        <meta name="twitter:card" content="summary_large_image"/>
-        <meta name="twitter:image" content="/content/images/2019/07/DSC05572.jpg"/>
-    
+  <title>Golang Memory Management (based on 1.12.5) &middot; No Idiots Allowed Here</title>
+  <meta name="description" content="" />
 
-
-
-<meta name="twitter:title" content="Golang Memory Management (based on 1.12.5)"/>
-<meta name="twitter:description" content=""/>
-<meta name="twitter:site" content="@kai_chihkaiyu"/>
-
-
-
-  	<meta property="og:title" content="Golang Memory Management (based on 1.12.5) &middot; No Idiots Allowed Here" />
-  	<meta property="og:site_name" content="No Idiots Allowed Here" />
-  	<meta property="og:url" content="https://chihkaiyu.github.io/post/golang-memory-management/" />
-
-    
-       <meta property="og:image" content="/content/images/2019/07/DSC05572.jpg"/>
-    
-
-    
-    <meta property="og:description" content="" />
-  	<meta property="og:type" content="article" />
-    <meta property="article:published_time" content="2019-07-02T00:03:00&#43;08:00" />
-
-    
-    <meta property="article:tag" content="golang" />
-    
-    
-
-    <title>Golang Memory Management (based on 1.12.5) &middot; No Idiots Allowed Here</title>
-
-    
-    <meta name="description" content="Golang Memory Management (based on 1.12.5) 此文是我在看過許多 Golang 記憶體管理的文章後，再搭配 souce code 所整理出來的。有點像是利用 souce code 來驗證我是否理解網路上所搜尋到的文章。
-Golang 基於 TCMalloc (Thread-Cac" />
-    
-
-    <meta name="HandheldFriendly" content="True" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <link rel="shortcut icon" href="https://chihkaiyu.github.io/images/favicon.ico">
-	  <link rel="apple-touch-icon" href="https://chihkaiyu.github.io/images/apple-touch-icon.png" />
-
-    <link rel="stylesheet" type="text/css" href="https://chihkaiyu.github.io/css/screen.css" />
-    <link rel="stylesheet" type="text/css" href="https://chihkaiyu.github.io/css/nav.css" />
-
-    
-
-    
-        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/styles/default.min.css">
-        <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/highlight.min.js"></script>
-        
-        <script>hljs.initHighlightingOnLoad();</script>
-    
-
-    
-      
-          <link href="https://chihkaiyu.github.io/index.xml" rel="alternate" type="application/rss+xml" title="No Idiots Allowed Here" />
-      
-      
-    
-    <meta name="generator" content="Hugo 0.53" />
-
-    <link rel="canonical" href="https://chihkaiyu.github.io/post/golang-memory-management/" />
-
-    
-      
-    
-    <script type="application/ld+json">
-{
-    "@context": "https://schema.org",
-    "@type": "Article",
-    "publisher": {
-        "@type": "Organization",
-        "name": ,
-        "logo": https://chihkaiyu.github.ioimages/profile.png
-    },
-    "author": {
-        "@type": "Person",
-        "name": ,
-        
-        "image": {
-            "@type": "ImageObject",
-            "url": https://chihkaiyu.github.ioimages/profile.png,
-            "width": 250,
-            "height": 250
-        }, 
-        
-        "url": https://chihkaiyu.github.io,
-        "sameAs": [
-            
-            
-             
-             
-             
-             
-             
-            
-        ],
-        "description": Software Engineer
-        
-    },
-    "headline": Golang Memory Management (based on 1.12.5),
-    "name": Golang Memory Management (based on 1.12.5),
-    "wordCount": 4601,
-    "timeRequired": "PT22M",
-    "inLanguage": {
-      "@type": "Language",
-      "alternateName": en
-    },
-    "url": https://chihkaiyu.github.io/post/golang-memory-management/,
-    "datePublished": 2019-07-02T00:03Z,
-    "dateModified": 2019-07-02T00:03Z,
-    
-    "image": {
-        "@type": "ImageObject",
-        "url": https://chihkaiyu.github.io/content/images/2019/07/DSC05572.jpg,
-        "width": 3000,
-        "height": 1445
-    },
-    
-    "keywords": golang,
-    "description": ,
-    "mainEntityOfPage": {
-        "@type": "WebPage",
-        "@id": https://chihkaiyu.github.io/post/golang-memory-management/
-    }
-}
-    </script>
-    
+  
+  <link type="text/css" rel="stylesheet" href="https://chihkaiyu.github.iocss/print.css" media="print">
+  <link type="text/css" rel="stylesheet" href="https://chihkaiyu.github.iocss/poole.css">
+  <link type="text/css" rel="stylesheet" href="https://chihkaiyu.github.iocss/syntax.css">
+  <link type="text/css" rel="stylesheet" href="https://chihkaiyu.github.iocss/hyde.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Abril+Fatface|PT+Sans:400,400i,700">
 
 
-    
+  
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://chihkaiyu.github.io/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="https://chihkaiyu.github.io/favicon.png">
 
-    
-    <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-      ga('create', 'UA-132491233-1', 'auto');
-      ga('send', 'pageview');
-
-    </script>
-    
-
-    
-
-    <script data-ad-client="ca-pub-4265977316103171" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+  
+  
 </head>
-<body class="nav-closed">
 
-  <div class="nav">
-    <h3 class="nav-title">Menu</h3>
-    <a href="#" class="nav-close">
-        <span class="hidden">Close</span>
-    </a>
-    <ul>
-        
-        
-        
-            
-            <li class="nav-opened" role="presentation">
-            	<a href="https://chihkaiyu.github.io/">Home</a>
-            </li>
-        
-            
-            <li class="nav-opened" role="presentation">
-            	<a href="https://chihkaiyu.github.io/page/about">About</a>
-            </li>
-        
-            
-            <li class="nav-opened" role="presentation">
-            	<a href="https://chihkaiyu.github.io/post">Archives</a>
-            </li>
-        
-            
-            <li class="nav-opened" role="presentation">
-            	<a href="https://chihkaiyu.github.io/page/tags">Tags</a>
-            </li>
-        
-        
-    </ul>
+  <body class=" ">
+  <aside class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <a href="https://chihkaiyu.github.io"><h1>No Idiots Allowed Here</h1></a>
+      <p class="lead">
+       Are you an idiot? 
+      </p>
+    </div>
 
-    
-    <a class="subscribe-button icon-feed" href="https://chihkaiyu.github.io/index.xml">Subscribe</a>
-    
-</div>
-<span class="nav-cover"></span>
+    <nav>
+      <ul class="sidebar-nav">
+        <li><a href="https://chihkaiyu.github.io">Home</a> </li>
+        <li><a href="https://chihkaiyu.github.io/page/about"> About </a></li><li><a href="https://chihkaiyu.github.io/post"> Archives </a></li><li><a href="https://chihkaiyu.github.io/page/tags"> Tags </a></li>
+      </ul>
+    </nav>
 
+    <p>&copy; 2020. All rights reserved. </p>
+  </div>
+</aside>
 
- <div class="site-wrapper">
-
-
-
-  
-  <header class="main-header post-head" style="background-image: url(/content/images/2019/07/DSC05572.jpg)">
-  
-  <nav class="main-nav overlay clearfix">
-
-
-  
-      <a class="blog-logo" href="https://chihkaiyu.github.io"><img src="https://chihkaiyu.github.io/images/profile.png" alt="Home" /></a>
-  
-  
-      <a class="menu-button" href="#"><span class="burger">&#9776;</span><span class="word">Menu</span></a>
-  
-  </nav>
-</header>
-
-
-
-<main class="content" role="main">
-
-
-
-
-  <article class="post post">
-
-    <header class="post-header">
-        <h1 class="post-title">Golang Memory Management (based on 1.12.5)</h1>
-        <small></small>
-
-        <section class="post-meta">
-        
-          <time class="post-date" datetime="2019-07-02T00:03:00&#43;08:00">
-            Jul 2, 2019
-          </time>
-        
-         
-          <span class="post-tag small"><a href="https://chihkaiyu.github.io/tags/golang/">#golang</a></span>
-         
-        </section>
-    </header>
-
-    <section class="post-content">
-      
-
-<h1 id="golang-memory-management-based-on-1-12-5">Golang Memory Management (based on 1.12.5)</h1>
-
-<p>此文是我在看過許多 Golang 記憶體管理的文章後，再搭配 souce code 所整理出來的。有點像是利用 souce code 來驗證我是否理解網路上所搜尋到的文章。<br />
-Golang 基於 <a href="http://goog-perftools.sourceforge.net/doc/tcmalloc.html">TCMalloc (Thread-Caching Malloc)</a> 加以修改，改為適合自己的 allocator。<br />
+    <main class="content container">
+    <div class="post">
+  <h1>Golang Memory Management (based on 1.12.5)</h1>
+  <time datetime=2019-07-02T00:03:00&#43;0800 class="post-date">Tue, Jul 2, 2019</time>
+  <h1 id="golang-memory-management-based-on-1125">Golang Memory Management (based on 1.12.5)</h1>
+<p>此文是我在看過許多 Golang 記憶體管理的文章後，再搭配 souce code 所整理出來的。有點像是利用 souce code 來驗證我是否理解網路上所搜尋到的文章。<br>
+Golang 基於 <a href="http://goog-perftools.sourceforge.net/doc/tcmalloc.html">TCMalloc (Thread-Caching Malloc)</a> 加以修改，改為適合自己的 allocator。<br>
 TCMalloc 有幾項特點：</p>
-
 <ul>
 <li>盡可能先分配一大塊記憶體，以降低分配及釋放的 overhead</li>
 <li>將這塊記憶體切成各種大小的 span，以降低 memory fragmentation</li>
 <li>分配特別小的物件時優化，以提升記憶體使用率</li>
 <li>Thread 裡有 cache，使用時可以不必 lock 以提升效率</li>
 </ul>
-
 <h1 id="terminology">Terminology</h1>
-
-<p>Golang memory management 裡有許多角色，此段落先簡單介紹各角色功用，下段落會詳細各角色的結構及彼此之間的關係。<br />
+<p>Golang memory management 裡有許多角色，此段落先簡單介紹各角色功用，下段落會詳細各角色的結構及彼此之間的關係。<br>
 下圖為大致架構圖，可一邊閱讀一邊參閱：</p>
-
-<p><img src="https://chihkaiyu.github.io/content/images/2019/07/golang_memory_architecture.png" alt="" /></p>
-
+<p><img src="https://chihkaiyu.github.io/content/images/2019/07/golang_memory_architecture.png" alt=""></p>
 <h2 id="mspan">mspan</h2>
-
-<p><code>mspan</code> 是 Golang 記憶體管理最小單位，由數頁 page 所組成，每一個 <code>mspan</code> 都會對應到一個 span class，用來決定該如何切割該 <code>mspan</code> 裡的 page。其 <code>mspan</code> 是 double-linked list。<br />
+<p><code>mspan</code> 是 Golang 記憶體管理最小單位，由數頁 page 所組成，每一個 <code>mspan</code> 都會對應到一個 span class，用來決定該如何切割該 <code>mspan</code> 裡的 page。其 <code>mspan</code> 是 double-linked list。<br>
 page 經過切割後變為 object，此 object 才是真正分配記憶體的最小單位。</p>
-
 <h2 id="mcache">mcache</h2>
-
-<p>每個 P (Golang scheduler 的 logic processor)，會綁定一個 <code>mcache</code>，由於同一時間只會有一個 G (goroutine) 在 P 上跑，所以在存取時並不需要 lock。<br />
+<p>每個 P (Golang scheduler 的 logic processor)，會綁定一個 <code>mcache</code>，由於同一時間只會有一個 G (goroutine) 在 P 上跑，所以在存取時並不需要 lock。<br>
 當 <code>mcache</code> 上的 <code>mspan</code> 已經沒有空間了，便會向 <code>mcentral</code> 申請一個有空間的 <code>mspan</code> 來替換舊的 <code>mspan</code>。</p>
-
 <h2 id="mcentral">mcentral</h2>
-
-<p><code>mcentral</code> 用來管理 <code>mspan</code>，一個 <code>mcentral</code> 負責一種 span class 的 <code>mspan</code>。<br />
+<p><code>mcentral</code> 用來管理 <code>mspan</code>，一個 <code>mcentral</code> 負責一種 span class 的 <code>mspan</code>。<br>
 當 <code>mcentral</code> 無 <code>mspan</code> 可用時，便會向 <code>mheap</code> 申請新的 <code>mspan</code> 加入。
-目前總共有 64 種 sizes，又根據是否存放 pointer 分為 scan 及 noscan 兩種。所以 <code>mheap</code> 裡總共有 134 (67*2) 個 <code>mcentral</code>。<br />
+目前總共有 64 種 sizes，又根據是否存放 pointer 分為 scan 及 noscan 兩種。所以 <code>mheap</code> 裡總共有 134 (67*2) 個 <code>mcentral</code>。<br>
 這是為了加速 GC 的 mark 階段，在 non-scan 裡，一定不會有 pointer，所以不需一個一個往下檢查。</p>
-
 <h2 id="mheap">mheap</h2>
-
-<p><code>mheap</code> 在整個 Golang runtime 裡只會存在一個，Golang 所用到的所有記憶體都要來向 <code>mheap</code> 申請。<br />
-而 <code>mheap</code> 自身擁有的記憶體不夠時，會再向 OS 申請，每次申請至少 1MB 的記憶體，減少向 OS 申請的 overhead。<br />
+<p><code>mheap</code> 在整個 Golang runtime 裡只會存在一個，Golang 所用到的所有記憶體都要來向 <code>mheap</code> 申請。<br>
+而 <code>mheap</code> 自身擁有的記憶體不夠時，會再向 OS 申請，每次申請至少 1MB 的記憶體，減少向 OS 申請的 overhead。<br>
 <code>mheap</code> 在管理記憶體時是以 page 為單位在管理的，這裡的 page 並不是 OS 層級的 page。Golang 的一頁 page 大小為 8k bytes。</p>
-
 <h2 id="arena">arena</h2>
-
 <p>Golang 的 heap 是由一堆 <code>arena</code> 對齊記憶體位址所組成的。一個 <code>arena</code> 大小為 64MB (不同平台、架構有所不同，此文皆以 Linux-64bit 為主)。</p>
-
 <h2 id="heaparena">heapArena</h2>
-
-<p>每一個 <code>arena</code> 都會有一相對應的 <code>heapArena</code>，這裡存放了一些 <code>arena</code> 的 metadata，像是 <code>bitmap</code> 或是 <code>spans</code>。<br />
+<p>每一個 <code>arena</code> 都會有一相對應的 <code>heapArena</code>，這裡存放了一些 <code>arena</code> 的 metadata，像是 <code>bitmap</code> 或是 <code>spans</code>。<br>
 在 <code>mheap</code> 裡的 <code>heapArena</code> 是一個二維 array，在大多數架構下，第一層通常只有一個 element。</p>
-
 <h2 id="span-class">span class</h2>
-
-<p>目前共有 67 種 size classes，每種 class 訂出了其 span 多大、其 object 多大。<br />
-而每一種 size 又會分為 scan 及 noscan 兩種，所以共有 134 種 span class。<br />
+<p>目前共有 67 種 size classes，每種 class 訂出了其 span 多大、其 object 多大。<br>
+而每一種 size 又會分為 scan 及 noscan 兩種，所以共有 134 種 span class。<br>
 每個 <code>mcentral</code> 負責一種 span class，其包含的所有 <code>mspan</code> 將會按照其規格劃分。</p>
-
 <h1 id="component">Component</h1>
-
 <h2 id="virtual-memory-layout">Virtual Memory Layout</h2>
-
 <p>Golang 的 virtual memory layout 長相如下：</p>
-
-<p><img src="https://chihkaiyu.github.io/content/images/2019/07/golang_memory_layout.png" alt="" /></p>
-
-<p>Golang 的 heap 是由一堆 arena 所組成，每個 arena 會對齊。而每一個 arena 會有一個相對應的 <code>heapArena</code> (<code>mheap.arenas</code>)，裡面存放 <code>spans</code> 及 <code>bitmap</code>，是 arena 的 metadata。<br />
-arena 根據不同 CPU 架構、OS 會有所不同，常見的 linux 64-bit 目前是 64MB。<br />
+<p><img src="https://chihkaiyu.github.io/content/images/2019/07/golang_memory_layout.png" alt=""></p>
+<p>Golang 的 heap 是由一堆 arena 所組成，每個 arena 會對齊。而每一個 arena 會有一個相對應的 <code>heapArena</code> (<code>mheap.arenas</code>)，裡面存放 <code>spans</code> 及 <code>bitmap</code>，是 arena 的 metadata。<br>
+arena 根據不同 CPU 架構、OS 會有所不同，常見的 linux 64-bit 目前是 64MB。<br>
 在增加 arena 時，會盡量試著讓 arena 是連續的，如此在分配較大的 <code>mspan</code> 時便能橫跨 arena。</p>
-
 <h2 id="mspan-1">mspan</h2>
-
 <p><a href="https://github.com/golang/go/blob/go1.12.5/src/runtime/mheap.go#L316">Source code</a></p>
-
-<p>下列是 <code>mspan</code> 結構，僅列出此文會講到的幾個 fields：<br />
+<p>下列是 <code>mspan</code> 結構，僅列出此文會講到的幾個 fields：<br>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">// mheap.go
 </span><span style="color:#75715e"></span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">mspan</span> <span style="color:#66d9ef">struct</span> {
 	<span style="color:#a6e22e">next</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">mspan</span>     <span style="color:#75715e">// 指向下一個 mspan
@@ -358,13 +136,9 @@ arena 根據不同 CPU 架構、OS 會有所不同，常見的 linux 64-bit 目�
 </span><span style="color:#75715e"></span>	<span style="color:#a6e22e">needzero</span>    <span style="color:#66d9ef">uint8</span>      <span style="color:#75715e">// 分配前是否需要 zeroed
 </span><span style="color:#75715e"></span>	<span style="color:#a6e22e">elemsize</span>    <span style="color:#66d9ef">uintptr</span>    <span style="color:#75715e">// 此 span 一個 object 的大小 computed from sizeclass or from npages
 </span><span style="color:#75715e"></span>}</code></pre></div></p>
-
 <h2 id="size-class">size class</h2>
-
 <p><a href="https://github.com/golang/go/blob/go1.12.5/src/runtime/sizeclasses.go#L6">Source code</a></p>
-
 <p>下表為 Golang 所有的 size class，下列解釋各 column 意義：</p>
-
 <ul>
 <li>class：此 class 的編號，分類時皆使用此編號作為 index</li>
 <li>bytes/obj：此 class 一個 object 的大小</li>
@@ -373,7 +147,6 @@ arena 根據不同 CPU 架構、OS 會有所不同，常見的 linux 64-bit 目�
 <li>tail waste：此 class 因無法完整分配所造成的浪費，例如 class 4，浪費了 32 bytes = 8192 - 48*170</li>
 <li>max waste：此 class 最多可能浪費的空間，計算公式為：((object size - (前一級的 object size + 1)) * object 數量 + tail waste) / mspan size，例如 class 4 為 31.52% = ((48 - (32 + 1)) * 170 + 32) / 8192</li>
 </ul>
-
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">// sizeclasses.go
 </span><span style="color:#75715e">// class  bytes/obj  bytes/span  objects  tail waste  max waste
 </span><span style="color:#75715e">//     1          8        8192     1024           0     87.50%
@@ -442,12 +215,9 @@ arena 根據不同 CPU 架構、OS 會有所不同，常見的 linux 64-bit 目�
 </span><span style="color:#75715e">//    64      27264       81920        3         128     10.00%
 </span><span style="color:#75715e">//    65      28672       57344        2           0      4.91%
 </span><span style="color:#75715e"></span><span style="color:#f92672">//</span>    <span style="color:#ae81ff">66</span>      <span style="color:#ae81ff">32768</span>       <span style="color:#ae81ff">32768</span>        <span style="color:#ae81ff">1</span>           <span style="color:#ae81ff">0</span>     <span style="color:#ae81ff">12.50</span><span style="color:#f92672">%</span></code></pre></div>
-
 <h2 id="mcache-1">mcache</h2>
-
 <p><a href="https://github.com/golang/go/blob/go1.12.5/src/runtime/mcache.go#L19">Source code</a></p>
-
-<p>下列是 <code>mcache</code> 結構，僅列出此文會講到的幾個 fields：<br />
+<p>下列是 <code>mcache</code> 結構，僅列出此文會講到的幾個 fields：<br>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">// mcache.go
 </span><span style="color:#75715e">//go:notinheap
 </span><span style="color:#75715e"></span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">mcache</span> <span style="color:#66d9ef">struct</span> {
@@ -457,12 +227,9 @@ arena 根據不同 CPU 架構、OS 會有所不同，常見的 linux 64-bit 目�
 </span><span style="color:#75715e"></span>
 	<span style="color:#a6e22e">alloc</span> [<span style="color:#a6e22e">numSpanClasses</span>]<span style="color:#f92672">*</span><span style="color:#a6e22e">mspan</span> <span style="color:#75715e">// 各式大小的 mspan list，共有 134 種，其 index 是 spanClass
 </span><span style="color:#75715e"></span>}</code></pre></div></p>
-
 <h2 id="mcentral-1">mcentral</h2>
-
 <p><a href="https://github.com/golang/go/blob/go1.12.5/src/runtime/mcentral.go#L20">Source code</a></p>
-
-<p>下列是 <code>mcentral</code> 結構，僅列出此文會講到的幾個 fields：<br />
+<p>下列是 <code>mcentral</code> 結構，僅列出此文會講到的幾個 fields：<br>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">// mcentral.go
 </span><span style="color:#75715e">//go:notinheap
 </span><span style="color:#75715e"></span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">mcentral</span> <span style="color:#66d9ef">struct</span> {
@@ -472,12 +239,9 @@ arena 根據不同 CPU 架構、OS 會有所不同，常見的 linux 64-bit 目�
 </span><span style="color:#75715e"></span>	<span style="color:#a6e22e">empty</span>     <span style="color:#a6e22e">mSpanList</span> <span style="color:#75715e">// 無可用 object 的 mspan double linked list 或是被 cached 在 mcache 了
 </span><span style="color:#75715e"></span>	<span style="color:#a6e22e">nmalloc</span> <span style="color:#66d9ef">uint64</span> <span style="color:#75715e">// 此 mcentral 所分配的 object 數量
 </span><span style="color:#75715e"></span>}</code></pre></div></p>
-
 <h2 id="mheap-1">mheap</h2>
-
 <p><a href="https://github.com/golang/go/blob/go1.12.5/src/runtime/mheap.go#L31">Source code</a></p>
-
-<p>下列是 <code>mheap</code> 結構，僅列出此文會講到的幾個 fields：<br />
+<p>下列是 <code>mheap</code> 結構，僅列出此文會講到的幾個 fields：<br>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">// mheap.go
 </span><span style="color:#75715e">//go:notinheap
 </span><span style="color:#75715e"></span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">mheap</span> <span style="color:#66d9ef">struct</span> {
@@ -532,24 +296,17 @@ arena 根據不同 CPU 架構、OS 會有所不同，常見的 linux 64-bit 目�
 	<span style="color:#75715e">// spans 將 arena 裡的 page 對應到相對應的 mspan。
 </span><span style="color:#75715e"></span>	<span style="color:#a6e22e">spans</span> [<span style="color:#a6e22e">pagesPerArena</span>]<span style="color:#f92672">*</span><span style="color:#a6e22e">mspan</span>
 }</code></pre></div></p>
-
 <h1 id="allocating-flow">Allocating Flow</h1>
-
-<p>Golang 將記憶體分層存取，也依 size 分級存取。對於特別大及特別小的亦有另外的處理方式。<br />
+<p>Golang 將記憶體分層存取，也依 size 分級存取。對於特別大及特別小的亦有另外的處理方式。<br>
 依據 size 及是否為 pointer 分為三種 allocating 流程：</p>
-
 <ul>
 <li>Tiny size：<code>&lt; 16 bytes</code> 且不為 pointer 的 object</li>
 <li>Small size：<code>&lt;= 32KB</code> 的 object</li>
 <li>Large size：<code>&gt; 32KB</code> 的 object</li>
 </ul>
-
 <h2 id="tiny-size">Tiny Size</h2>
-
 <p><a href="https://github.com/golang/go/blob/go1.12.5/src/runtime/malloc.go#L864">Source code</a></p>
-
 <p>Tiny size 分配流程大致如下：</p>
-
 <ol>
 <li>將分配大小對齊在 2、4、8 上</li>
 <li>若該 <code>mcache</code> 有 tiny block 且有合適的空間，便直接分配</li>
@@ -558,9 +315,7 @@ arena 根據不同 CPU 架構、OS 會有所不同，常見的 linux 64-bit 目�
 <li>若 <code>mcentral</code> 也沒有，則會再向 <code>mheap</code> 申請</li>
 <li>視情況調整 <code>mcache</code> 的 tiny block 及 tinyoffset</li>
 </ol>
-
 <p>上述行為到第 3 步為止都不需 lock，第 4、5 步都需要 lock，分別 lock 住 <code>mcentral</code> 及 <code>mheap</code>。</p>
-
 <p>下列是 tiny size allocating 的 部份內容：
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">// malloc.go
 </span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">mallocgc</span>(<span style="color:#a6e22e">size</span> <span style="color:#66d9ef">uintptr</span>, <span style="color:#a6e22e">typ</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">_type</span>, <span style="color:#a6e22e">needzero</span> <span style="color:#66d9ef">bool</span>) <span style="color:#a6e22e">unsafe</span>.<span style="color:#a6e22e">Pointer</span> {
@@ -615,8 +370,7 @@ arena 根據不同 CPU 架構、OS 會有所不同，常見的 linux 64-bit 目�
 </span><span style="color:#75715e"></span>
 	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">x</span>
 }</code></pre></div></p>
-
-<p><code>nextFreeFast</code> 利用 <code>allocCache</code> 這個 function 快速找出可用的 object 位置：<br />
+<p><code>nextFreeFast</code> 利用 <code>allocCache</code> 這個 function 快速找出可用的 object 位置：<br>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">// malloc.go
 </span><span style="color:#75715e">// nextFreeFast returns the next free object if one is quickly available.
 </span><span style="color:#75715e">// Otherwise it returns 0.
@@ -637,8 +391,7 @@ arena 根據不同 CPU 架構、OS 會有所不同，常見的 linux 64-bit 目�
 	}
 	<span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span> <span style="color:#75715e">// 若無法找到可用的 object，便回傳 0 讓外面處理
 </span><span style="color:#75715e"></span>}</code></pre></div></p>
-
-<p>若 <code>nextFreeFast</code> 找不到，便呼叫 <code>nextFree</code>：<br />
+<p>若 <code>nextFreeFast</code> 找不到，便呼叫 <code>nextFree</code>：<br>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">// malloc.go
 </span><span style="color:#75715e">// nextFree returns the next free object from the cached span if one is available.
 </span><span style="color:#75715e">// Otherwise it refills the cache with a span with an available object and
@@ -678,8 +431,7 @@ arena 根據不同 CPU 架構、OS 會有所不同，常見的 linux 64-bit 目�
 	}
 	<span style="color:#66d9ef">return</span>
 }</code></pre></div></p>
-
-<p>接著來看看 <code>nextFreeIndex</code> 如何找出可用的 <code>freeIndex</code>：<br />
+<p>接著來看看 <code>nextFreeIndex</code> 如何找出可用的 <code>freeIndex</code>：<br>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">// mbitmap.go
 </span><span style="color:#75715e">// nextFreeIndex returns the index of the next free object in s at
 </span><span style="color:#75715e">// or after s.freeindex.
@@ -737,8 +489,7 @@ arena 根據不同 CPU 架構、OS 會有所不同，常見的 linux 64-bit 目�
 	<span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">freeindex</span> = <span style="color:#a6e22e">sfreeindex</span>
 	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">result</span>
 }</code></pre></div></p>
-
-<p>若該 <code>mspan</code> 已無可用的 object 便呼叫 <code>refill</code> 向 <code>mcentral</code> 申請新的 <code>mspan</code> 替換舊的：<br />
+<p>若該 <code>mspan</code> 已無可用的 object 便呼叫 <code>refill</code> 向 <code>mcentral</code> 申請新的 <code>mspan</code> 替換舊的：<br>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">// mcache.go
 </span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">mcache</span>) <span style="color:#a6e22e">refill</span>(<span style="color:#a6e22e">spc</span> <span style="color:#a6e22e">spanClass</span>) {
 	<span style="color:#a6e22e">s</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">alloc</span>[<span style="color:#a6e22e">spc</span>] <span style="color:#75715e">// 取出目前滿載的 mspan
@@ -769,8 +520,7 @@ arena 根據不同 CPU 架構、OS 會有所不同，常見的 linux 64-bit 目�
 
 	<span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">alloc</span>[<span style="color:#a6e22e">spc</span>] = <span style="color:#a6e22e">s</span> <span style="color:#75715e">// 將新的 mspan 放到 mcache 裡
 </span><span style="color:#75715e"></span>}</code></pre></div></p>
-
-<p>接著再看 <code>cacheSpan</code> 如何從 <code>mcentral</code> 拿出一個新的 <code>mspan</code> 放到 <code>mcache</code> 裡：<br />
+<p>接著再看 <code>cacheSpan</code> 如何從 <code>mcentral</code> 拿出一個新的 <code>mspan</code> 放到 <code>mcache</code> 裡：<br>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">// mcentral.go
 </span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">mcentral</span>) <span style="color:#a6e22e">cacheSpan</span>() <span style="color:#f92672">*</span><span style="color:#a6e22e">mspan</span> {
 	<span style="color:#75715e">// Deduct credit for this span allocation and sweep if necessary.
@@ -887,8 +637,7 @@ arena 根據不同 CPU 架構、OS 會有所不同，常見的 linux 64-bit 目�
 
 	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">s</span>
 }</code></pre></div></p>
-
-<p>上面是 <code>mcache</code> 向 <code>mcentral</code> 申請新的 <code>mspan</code>，如果 <code>mcentral</code> 也沒有，便呼叫 <code>grow</code> 向 <code>mheap</code> 申請：<br />
+<p>上面是 <code>mcache</code> 向 <code>mcentral</code> 申請新的 <code>mspan</code>，如果 <code>mcentral</code> 也沒有，便呼叫 <code>grow</code> 向 <code>mheap</code> 申請：<br>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">// mcentral.go
 </span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">mcentral</span>) <span style="color:#a6e22e">grow</span>() <span style="color:#f92672">*</span><span style="color:#a6e22e">mspan</span> {
 	<span style="color:#75715e">// 根據該 mcentral 的 spanclass 計算要申請的量
@@ -907,8 +656,7 @@ arena 根據不同 CPU 架構、OS 會有所不同，常見的 linux 64-bit 目�
 	<span style="color:#a6e22e">heapBitsForAddr</span>(<span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">base</span>()).<span style="color:#a6e22e">initSpan</span>(<span style="color:#a6e22e">s</span>)
 	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">s</span>
 }</code></pre></div></p>
-
-<p>繼續看 <code>alloc</code> 這個 function：<br />
+<p>繼續看 <code>alloc</code> 這個 function：<br>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">// mheap.go
 </span><span style="color:#75715e">// alloc allocates a new span of npage pages from the GC&#39;d heap.
 </span><span style="color:#75715e">//
@@ -933,8 +681,7 @@ arena 根據不同 CPU 架構、OS 會有所不同，常見的 linux 64-bit 目�
 	}
 	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">s</span>
 }</code></pre></div></p>
-
-<p>繼續看 <code>alloc_m</code> 這個 function:<br />
+<p>繼續看 <code>alloc_m</code> 這個 function:<br>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">// mheap.go
 </span><span style="color:#75715e">// alloc_m is the internal implementation of mheap.alloc.
 </span><span style="color:#75715e">//
@@ -1016,8 +763,7 @@ arena 根據不同 CPU 架構、OS 會有所不同，常見的 linux 64-bit 目�
 </span><span style="color:#75715e"></span>	<span style="color:#a6e22e">unlock</span>(<span style="color:#f92672">&amp;</span><span style="color:#a6e22e">h</span>.<span style="color:#a6e22e">lock</span>)
 	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">s</span>
 }</code></pre></div></p>
-
-<p>再來重點是 <code>allocSpanLocked</code> 這個 function：<br />
+<p>再來重點是 <code>allocSpanLocked</code> 這個 function：<br>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">// mheap.go
 </span><span style="color:#75715e">// Allocates a span of the given size.  h must be locked.
 </span><span style="color:#75715e">// The returned span has been removed from the
@@ -1096,8 +842,7 @@ arena 根據不同 CPU 架構、OS 會有所不同，常見的 linux 64-bit 目�
 	}
 	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">s</span>
 }</code></pre></div></p>
-
-<p>接著 <code>pickFreeSpan</code> 這個 function 來得知 <code>mheap</code> 怎麼找出可用的 <code>mspan</code>：<br />
+<p>接著 <code>pickFreeSpan</code> 這個 function 來得知 <code>mheap</code> 怎麼找出可用的 <code>mspan</code>：<br>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">// mheap.go
 </span><span style="color:#75715e">// pickFreeSpan acquires a free span from internal free list
 </span><span style="color:#75715e">// structures if one is available. Otherwise returns nil.
@@ -1118,8 +863,7 @@ arena 根據不同 CPU 架構、OS 會有所不同，常見的 linux 64-bit 目�
 	}
 	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">s</span>
 }</code></pre></div></p>
-
-<p>最後一個 function 了！當 <code>mheap</code> 空間不夠時，會呼叫 <code>grow</code> 向 OS 申請空間：<br />
+<p>最後一個 function 了！當 <code>mheap</code> 空間不夠時，會呼叫 <code>grow</code> 向 OS 申請空間：<br>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">// mheap.go
 </span><span style="color:#75715e">// Try to add at least npage pages of memory to the heap,
 </span><span style="color:#75715e">// returning whether it worked.
@@ -1152,22 +896,16 @@ arena 根據不同 CPU 架構、OS 會有所不同，常見的 linux 64-bit 目�
 	<span style="color:#a6e22e">h</span>.<span style="color:#a6e22e">freeSpanLocked</span>(<span style="color:#a6e22e">s</span>, <span style="color:#66d9ef">false</span>, <span style="color:#66d9ef">true</span>, <span style="color:#ae81ff">0</span>) <span style="color:#75715e">// 將該 mspan 插入 mheap.free 裡
 </span><span style="color:#75715e"></span>	<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span> <span style="color:#75715e">// return true 表示成功向 OS 申請空間
 </span><span style="color:#75715e"></span>}</code></pre></div></p>
-
 <h2 id="small-size">Small Size</h2>
-
 <p><a href="https://github.com/golang/go/blob/go1.12.5/src/runtime/malloc.go#L928">Source code</a></p>
-
 <p>Small size 分配流程大致如下：</p>
-
 <ol>
 <li>根據需求確定其 size class 及 span class</li>
 <li>試著從 <code>mcache</code> 找可用的 object，有的話便直接分配</li>
 <li>若沒有則向 <code>mcentral</code> 要一個 <code>mspan</code></li>
 <li>若 <code>mcentral</code> 也沒有，則會再向 <code>mheap</code> 申請</li>
 </ol>
-
 <p>上述行為到第 2 步為止都不需 lock，第 3、4 步都需要 lock，分別 lock 住 <code>mcentral</code> 及 <code>mheap</code>。</p>
-
 <p>下列是 small size allocating 的部份內容：
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">// malloc.go
 </span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">mallocgc</span>(<span style="color:#a6e22e">size</span> <span style="color:#66d9ef">uintptr</span>, <span style="color:#a6e22e">typ</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">_type</span>, <span style="color:#a6e22e">needzero</span> <span style="color:#66d9ef">bool</span>) <span style="color:#a6e22e">unsafe</span>.<span style="color:#a6e22e">Pointer</span> {
@@ -1206,19 +944,14 @@ arena 根據不同 CPU 架構、OS 會有所不同，常見的 linux 64-bit 目�
 </span><span style="color:#75715e"></span>
 	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">x</span>
 }</code></pre></div></p>
-
-<p>額外看一下 <code>makeSpanClass</code>：<br />
+<p>額外看一下 <code>makeSpanClass</code>：<br>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">makeSpanClass</span>(<span style="color:#a6e22e">sizeclass</span> <span style="color:#66d9ef">uint8</span>, <span style="color:#a6e22e">noscan</span> <span style="color:#66d9ef">bool</span>) <span style="color:#a6e22e">spanClass</span> {
 	<span style="color:#75715e">// 可以看到 size class 與 span class 的轉換方式其實就是將 size class * 2 再根據是否為 pointer 加 0 或 1
 </span><span style="color:#75715e"></span>	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">spanClass</span>(<span style="color:#a6e22e">sizeclass</span><span style="color:#f92672">&lt;&lt;</span><span style="color:#ae81ff">1</span>) | <span style="color:#a6e22e">spanClass</span>(<span style="color:#a6e22e">bool2int</span>(<span style="color:#a6e22e">noscan</span>))
 }</code></pre></div></p>
-
 <h2 id="large-size">Large Size</h2>
-
 <p><a href="https://github.com/golang/go/blob/go1.12.5/src/runtime/malloc.go#L947">Source code</a></p>
-
 <p>Large size 分配流程相對簡單，跳過 <code>mcache</code> 及 <code>mcentral</code> 直接透過 <code>mheap</code> 向 OS 申請需要的空間。</p>
-
 <p>下列是 large size allocating 的 部份內容：
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">// malloc.go
 </span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">mallocgc</span>(<span style="color:#a6e22e">size</span> <span style="color:#66d9ef">uintptr</span>, <span style="color:#a6e22e">typ</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">_type</span>, <span style="color:#a6e22e">needzero</span> <span style="color:#66d9ef">bool</span>) <span style="color:#a6e22e">unsafe</span>.<span style="color:#a6e22e">Pointer</span> {
@@ -1246,8 +979,7 @@ arena 根據不同 CPU 架構、OS 會有所不同，常見的 linux 64-bit 目�
 </span><span style="color:#75715e"></span>
 	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">x</span>
 }</code></pre></div></p>
-
-<p>接著看 <code>largeAlloc</code> 這個 function：<br />
+<p>接著看 <code>largeAlloc</code> 這個 function：<br>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">// malloc.go
 </span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">largeAlloc</span>(<span style="color:#a6e22e">size</span> <span style="color:#66d9ef">uintptr</span>, <span style="color:#a6e22e">needzero</span> <span style="color:#66d9ef">bool</span>, <span style="color:#a6e22e">noscan</span> <span style="color:#66d9ef">bool</span>) <span style="color:#f92672">*</span><span style="color:#a6e22e">mspan</span> {
 	<span style="color:#75715e">// print(&#34;largeAlloc size=&#34;, size, &#34;\n&#34;)
@@ -1273,15 +1005,11 @@ arena 根據不同 CPU 架構、OS 會有所不同，常見的 linux 64-bit 目�
 	<span style="color:#a6e22e">heapBitsForAddr</span>(<span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">base</span>()).<span style="color:#a6e22e">initSpan</span>(<span style="color:#a6e22e">s</span>)
 	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">s</span>
 }</code></pre></div></p>
-
 <h2 id="flow-chart">Flow Chart</h2>
-
-<p>搭配底下的圖片可知整個 Golang 的分配流程是有層級的。事先向 OS 申請一大塊連續的虛擬記憶體，再切割成各種粒度的 mspan 來分配。<br />
-只要能弄懂 tiny allocation 的流程，剩下的 small 及 large 便也能理解了，他們其實都是重覆一樣的動作而已。<br />
-<img src="https://chihkaiyu.github.io/content/images/2019/07/golang-memory-allocating-flow.png" alt="" /></p>
-
+<p>搭配底下的圖片可知整個 Golang 的分配流程是有層級的。事先向 OS 申請一大塊連續的虛擬記憶體，再切割成各種粒度的 mspan 來分配。<br>
+只要能弄懂 tiny allocation 的流程，剩下的 small 及 large 便也能理解了，他們其實都是重覆一樣的動作而已。<br>
+<img src="https://chihkaiyu.github.io/content/images/2019/07/golang-memory-allocating-flow.png" alt=""></p>
 <h1 id="reference">Reference</h1>
-
 <ul>
 <li><a href="https://speakerdeck.com/emfree/allocator-wrestling">https://speakerdeck.com/emfree/allocator-wrestling</a></li>
 <li><a href="https://blog.ankuranand.com/2019/02/20/a-visual-guide-to-golang-memory-allocator-from-ground-up/">https://blog.ankuranand.com/2019/02/20/a-visual-guide-to-golang-memory-allocator-from-ground-up/</a></li>
@@ -1296,129 +1024,33 @@ arena 根據不同 CPU 架構、OS 會有所不同，常見的 linux 64-bit 目�
 <li><a href="https://kknews.cc/zh-tw/code/5rbk9kk.html">https://kknews.cc/zh-tw/code/5rbk9kk.html</a></li>
 </ul>
 
-    </section>
+</div>
 
-
-  <footer class="post-footer">
-
-
-    
-
-
-
-
-
-
-
-
-<figure class="author-image">
-    <a class="img" href="https://chihkaiyu.github.io" style="background-image: url(/images/profile.png)"><span class="hidden">Chih Kai Yu's Picture</span></a>
-</figure>
-
-
-<section class="author">
-  <h4><a href="https://chihkaiyu.github.io">Chih Kai Yu</a></h4>
-  
-  <p>Software Engineer</p>
-  
-  <div class="author-meta">
-    <span class="author-location icon-location">Taipei, Taiwan</span>
-    <span class="author-link icon-link"><a href="https://chihkaiyu.github.io">https://chihkaiyu.github.io</a></span>
-  </div>
-</section>
-
-
-
-
-    
-<section class="share">
-  <h4>Share this post</h4>
-  <a class="icon-twitter" style="font-size: 1.4em" href="https://twitter.com/share?text=Golang%20Memory%20Management%20%28based%20on%201.12.5%29&nbsp;-&nbsp;No%20Idiots%20Allowed%20Here&amp;url=https%3a%2f%2fchihkaiyu.github.io%2fpost%2fgolang-memory-management%2f"
-      onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
-      <span class="hidden">Twitter</span>
-  </a>
-  <a class="icon-facebook" style="font-size: 1.4em" href="https://www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fchihkaiyu.github.io%2fpost%2fgolang-memory-management%2f"
-      onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
-      <span class="hidden">Facebook</span>
-  </a>
-  <a class="icon-pinterest" style="font-size: 1.4em" href="http://pinterest.com/pin/create/button/?url=https%3a%2f%2fchihkaiyu.github.io%2fpost%2fgolang-memory-management%2f&amp;description=Golang%20Memory%20Management%20%28based%20on%201.12.5%29"
-      onclick="window.open(this.href, 'pinterest-share','width=580,height=296');return false;">
-      <span class="hidden">Pinterest</span>
-  </a>
-  <a class="icon-google-plus" style="font-size: 1.4em" href="https://plus.google.com/share?url=https%3a%2f%2fchihkaiyu.github.io%2fpost%2fgolang-memory-management%2f"
-     onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
-      <span class="hidden">Google+</span>
-  </a>
-</section>
-
-
-
-    
-
+<h2>Comments</h2>
 <div id="disqus_thread"></div>
-<script>
-
-
-
-
-var disqus_config = function () {
-this.page.url = "https:\/\/chihkaiyu.github.io\/post\/golang-memory-management\/";  
-this.page.identifier = "https:\/\/chihkaiyu.github.io\/post\/golang-memory-management\/"; 
-};
-
-(function() { 
-var d = document, s = d.createElement('script');
-s.src = 'https://chihkaiyu.disqus.com/embed.js';
-s.setAttribute('data-timestamp', +new Date());
-(d.head || d.body).appendChild(s);
-})();
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "chihkaiyu" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
 </script>
 <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    </main>
 
-
-
-
-
-
-
-
-  </footer>
-</article>
-
-</main>
-
-
-  <aside class="read-next">
-  
-      <a class="read-next-story" style="background-image: url(/content/images/2019/10/DSC05514.jpg)" href="https://chihkaiyu.github.io/post/why-quick-sort-is-faster-than-heap-sort/">
-          <section class="post">
-              <h2>Why Quick Sort Is Faster than Heap Sort?</h2>
-              
-          </section>
-      </a>
-  
-  
-      <a class="read-next-story prev" style="background-image: url(/content/images/2019/03/DSC05004.jpg)" href="https://chihkaiyu.github.io/post/chapter-vi-big-o/">
-          <section class="post">
-              <h2>Chapter VI - Big O</h2>
-          </section>
-      </a>
-  
-</aside>
-
-
-
-    <footer class="site-footer clearfix">
-        <section class="copyright"><a href="">No Idiots Allowed Here</a> </section>
-        
-        <section class="poweredby">Proudly generated by <a class="icon-hugo" href="http://gohugo.io">HUGO</a>, with <a class="icon-theme" href="https://github.com/vjeantet/hugo-theme-casper">Casper</a> theme</section>
-        
-    </footer>
-    </div>
-    <script type="text/javascript" src="https://chihkaiyu.github.io/js/jquery.js"></script>
-    <script type="text/javascript" src="https://chihkaiyu.github.io/js/jquery.fitvids.js"></script>
-    <script type="text/javascript" src="https://chihkaiyu.github.io/js/index.js"></script>
     
-</body>
+      
+    
+  </body>
 </html>
-

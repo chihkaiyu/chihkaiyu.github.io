@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
@@ -8,8 +8,38 @@
   </url>
   
   <url>
+    <loc>https://chihkaiyu.github.io/tags/life/</loc>
+    <lastmod>2019-12-27T00:53:00+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://chihkaiyu.github.io/</loc>
+    <lastmod>2019-12-27T00:53:00+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://chihkaiyu.github.io/post/</loc>
+    <lastmod>2019-12-27T00:53:00+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://chihkaiyu.github.io/tags/</loc>
+    <lastmod>2019-12-27T00:53:00+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://chihkaiyu.github.io/tags/algorithm/</loc>
+    <lastmod>2019-10-02T01:10:00+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://chihkaiyu.github.io/post/why-quick-sort-is-faster-than-heap-sort/</loc>
     <lastmod>2019-10-02T01:10:00+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://chihkaiyu.github.io/tags/golang/</loc>
+    <lastmod>2019-07-02T00:03:00+08:00</lastmod>
   </url>
   
   <url>
@@ -23,12 +53,27 @@
   </url>
   
   <url>
+    <loc>https://chihkaiyu.github.io/tags/digest/</loc>
+    <lastmod>2019-03-07T00:24:00+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://chihkaiyu.github.io/post/prometheus-survey/</loc>
     <lastmod>2019-01-15T22:16:00+08:00</lastmod>
   </url>
   
   <url>
+    <loc>https://chihkaiyu.github.io/tags/sre/</loc>
+    <lastmod>2019-01-15T22:16:00+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://chihkaiyu.github.io/page/about/</loc>
+    <lastmod>2019-01-14T22:32:07+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://chihkaiyu.github.io/page/</loc>
     <lastmod>2019-01-14T22:32:07+08:00</lastmod>
   </url>
   
@@ -58,8 +103,18 @@
   </url>
   
   <url>
+    <loc>https://chihkaiyu.github.io/tags/gitlab/</loc>
+    <lastmod>2018-06-29T20:03:20+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://chihkaiyu.github.io/post/walkthrough-gitlab/</loc>
     <lastmod>2018-06-29T20:03:20+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://chihkaiyu.github.io/tags/docker/</loc>
+    <lastmod>2018-06-12T17:15:55+08:00</lastmod>
   </url>
   
   <url>
@@ -78,74 +133,7 @@
   </url>
   
   <url>
-    <loc>https://chihkaiyu.github.io/tags/algorithm/</loc>
-    <lastmod>2019-10-02T01:10:00+08:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
     <loc>https://chihkaiyu.github.io/categories/</loc>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://chihkaiyu.github.io/tags/digest/</loc>
-    <lastmod>2019-03-07T00:24:00+08:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://chihkaiyu.github.io/tags/docker/</loc>
-    <lastmod>2018-06-12T17:15:55+08:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://chihkaiyu.github.io/tags/gitlab/</loc>
-    <lastmod>2018-06-29T20:03:20+08:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://chihkaiyu.github.io/tags/golang/</loc>
-    <lastmod>2019-07-02T00:03:00+08:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://chihkaiyu.github.io/tags/life/</loc>
-    <lastmod>2019-12-27T00:53:00+08:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://chihkaiyu.github.io/</loc>
-    <lastmod>2019-12-27T00:53:00+08:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://chihkaiyu.github.io/page/</loc>
-    <lastmod>2019-01-14T22:32:07+08:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://chihkaiyu.github.io/post/</loc>
-    <lastmod>2019-12-27T00:53:00+08:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://chihkaiyu.github.io/tags/sre/</loc>
-    <lastmod>2019-01-15T22:16:00+08:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://chihkaiyu.github.io/tags/</loc>
-    <lastmod>2019-10-02T01:10:00+08:00</lastmod>
-    <priority>0</priority>
   </url>
   
 </urlset>

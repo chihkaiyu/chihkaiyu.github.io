@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Sre on No Idiots Allowed Here</title>
+    <title>sre on No Idiots Allowed Here</title>
     <link>https://chihkaiyu.github.io/tags/sre/</link>
-    <description>Recent content in Sre on No Idiots Allowed Here</description>
+    <description>Recent content in sre on No Idiots Allowed Here</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-TW</language>
     <lastBuildDate>Tue, 15 Jan 2019 22:16:00 +0800</lastBuildDate>
@@ -17,11 +17,7 @@
       <pubDate>Tue, 15 Jan 2019 22:16:00 +0800</pubDate>
       
       <guid>https://chihkaiyu.github.io/post/prometheus-survey/</guid>
-      <description>Prometheus Survey Architecture Prometheus server 負責蒐集及儲存各 target 的 metrics，也會檢查 alert 規則，觸發後會發 alert 給 alertmanager。
-Target 要被監控的目標，會以網頁方式將 metrics 以固定格式呈現給 prometheus server 抓取。
-Pushgateway: 若有一些 target 不適合以抓取的方式獲得 metrics，例如存活時間很短的 job，prometheus server 還來不及抓就關閉了，則可以將 metrics 推送到 pushgateway，再讓 prometheus server 到 pushgateway 抓取 metrics。
-Alertmanager: prometheus server 會檢查 alert 規則，將觸發的 alert 送到 alertmanager，而 alertmanager 會將 alert 整理後，確定可以發出才會將 alert 送往設定的 receiver。
-Concepts Data Model  每一條 time series 由 metric name 及一組 labels 來辨別。 Metric name 必須符合此 regular expression: [a-zA-Z_:][a-zA-Z0-9_:]-。 Labels 使 Prometheus 可以有多維度的資料，對任何 label 值變動，都會產生一條新的 time series。 Labels 必須符合此 regular expression: [a-zA-Z_][a-zA-Z0-9_]-。 開頭是 __ 的 label 是預留給內部使用的。 Label 值可以使用任何 unicode 字元。 每一個採樣點是：  一個 float64 值 millisecond 等級的 timestamp  Metric name 及 labels 用法  &amp;lt;metric name&amp;gt;{&amp;lt;label name&amp;gt;=&amp;lt;label value&amp;gt;, .</description>
+      <description>Prometheus Survey Architecture Prometheus server 負責蒐集及儲存各 target 的 metrics，也會檢查 alert 規則，觸發後會發 alert 給 alertmanager。 Target 要被監控的目標，會以網頁方式將 metrics 以固</description>
     </item>
     
   </channel>

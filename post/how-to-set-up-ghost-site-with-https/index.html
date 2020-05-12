@@ -1,291 +1,92 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-TW" lang="zh-TW">
 <head>
+  <link href="https://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="generator" content="Hugo 0.70.0" />
 
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    
-    
-        
-        <meta name="twitter:card" content="summary_large_image"/>
-        <meta name="twitter:image" content="/content/images/2018/05/DSC03682.jpg"/>
-    
+  <title>How to Install Ghost with Nginx and MySQL &middot; No Idiots Allowed Here</title>
+  <meta name="description" content="" />
 
-
-
-<meta name="twitter:title" content="How to Install Ghost with Nginx and MySQL"/>
-<meta name="twitter:description" content=""/>
-<meta name="twitter:site" content="@kai_chihkaiyu"/>
-
-
-
-  	<meta property="og:title" content="How to Install Ghost with Nginx and MySQL &middot; No Idiots Allowed Here" />
-  	<meta property="og:site_name" content="No Idiots Allowed Here" />
-  	<meta property="og:url" content="https://chihkaiyu.github.io/post/how-to-set-up-ghost-site-with-https/" />
-
-    
-       <meta property="og:image" content="/content/images/2018/05/DSC03682.jpg"/>
-    
-
-    
-    <meta property="og:description" content="" />
-  	<meta property="og:type" content="article" />
-    <meta property="article:published_time" content="2018-05-19T23:33:58&#43;08:00" />
-
-    
-    <meta property="article:tag" content="docker" />
-    
-    
-
-    <title>How to Install Ghost with Nginx and MySQL &middot; No Idiots Allowed Here</title>
-
-    
-    <meta name="description" content="This article will show you how to install and configure Ghost with Nginx and MySQL. In fact, it is that how this blog has been built. This article contains: - P" />
-    
-
-    <meta name="HandheldFriendly" content="True" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <link rel="shortcut icon" href="https://chihkaiyu.github.io/images/favicon.ico">
-	  <link rel="apple-touch-icon" href="https://chihkaiyu.github.io/images/apple-touch-icon.png" />
-
-    <link rel="stylesheet" type="text/css" href="https://chihkaiyu.github.io/css/screen.css" />
-    <link rel="stylesheet" type="text/css" href="https://chihkaiyu.github.io/css/nav.css" />
-
-    
-
-    
-        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/styles/default.min.css">
-        <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/highlight.min.js"></script>
-        
-        <script>hljs.initHighlightingOnLoad();</script>
-    
-
-    
-      
-          <link href="https://chihkaiyu.github.io/index.xml" rel="alternate" type="application/rss+xml" title="No Idiots Allowed Here" />
-      
-      
-    
-    <meta name="generator" content="Hugo 0.53" />
-
-    <link rel="canonical" href="https://chihkaiyu.github.io/post/how-to-set-up-ghost-site-with-https/" />
-
-    
-      
-    
-    <script type="application/ld+json">
-{
-    "@context": "https://schema.org",
-    "@type": "Article",
-    "publisher": {
-        "@type": "Organization",
-        "name": ,
-        "logo": https://chihkaiyu.github.ioimages/profile.png
-    },
-    "author": {
-        "@type": "Person",
-        "name": ,
-        
-        "image": {
-            "@type": "ImageObject",
-            "url": https://chihkaiyu.github.ioimages/profile.png,
-            "width": 250,
-            "height": 250
-        }, 
-        
-        "url": https://chihkaiyu.github.io,
-        "sameAs": [
-            
-            
-             
-             
-             
-             
-             
-            
-        ],
-        "description": Software Engineer
-        
-    },
-    "headline": How to Install Ghost with Nginx and MySQL,
-    "name": How to Install Ghost with Nginx and MySQL,
-    "wordCount": 596,
-    "timeRequired": "PT3M",
-    "inLanguage": {
-      "@type": "Language",
-      "alternateName": en
-    },
-    "url": https://chihkaiyu.github.io/post/how-to-set-up-ghost-site-with-https/,
-    "datePublished": 2018-05-19T23:33Z,
-    "dateModified": 2018-05-19T23:33Z,
-    
-    "image": {
-        "@type": "ImageObject",
-        "url": https://chihkaiyu.github.io/content/images/2018/05/DSC03682.jpg,
-        "width": 3000,
-        "height": 1445
-    },
-    
-    "keywords": docker,
-    "description": ,
-    "mainEntityOfPage": {
-        "@type": "WebPage",
-        "@id": https://chihkaiyu.github.io/post/how-to-set-up-ghost-site-with-https/
-    }
-}
-    </script>
-    
+  
+  <link type="text/css" rel="stylesheet" href="https://chihkaiyu.github.iocss/print.css" media="print">
+  <link type="text/css" rel="stylesheet" href="https://chihkaiyu.github.iocss/poole.css">
+  <link type="text/css" rel="stylesheet" href="https://chihkaiyu.github.iocss/syntax.css">
+  <link type="text/css" rel="stylesheet" href="https://chihkaiyu.github.iocss/hyde.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Abril+Fatface|PT+Sans:400,400i,700">
 
 
-    
+  
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://chihkaiyu.github.io/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="https://chihkaiyu.github.io/favicon.png">
 
-    
-    <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-      ga('create', 'UA-132491233-1', 'auto');
-      ga('send', 'pageview');
-
-    </script>
-    
-
-    
-
-    <script data-ad-client="ca-pub-4265977316103171" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+  
+  
 </head>
-<body class="nav-closed">
 
-  <div class="nav">
-    <h3 class="nav-title">Menu</h3>
-    <a href="#" class="nav-close">
-        <span class="hidden">Close</span>
-    </a>
-    <ul>
-        
-        
-        
-            
-            <li class="nav-opened" role="presentation">
-            	<a href="https://chihkaiyu.github.io/">Home</a>
-            </li>
-        
-            
-            <li class="nav-opened" role="presentation">
-            	<a href="https://chihkaiyu.github.io/page/about">About</a>
-            </li>
-        
-            
-            <li class="nav-opened" role="presentation">
-            	<a href="https://chihkaiyu.github.io/post">Archives</a>
-            </li>
-        
-            
-            <li class="nav-opened" role="presentation">
-            	<a href="https://chihkaiyu.github.io/page/tags">Tags</a>
-            </li>
-        
-        
-    </ul>
+  <body class=" ">
+  <aside class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <a href="https://chihkaiyu.github.io"><h1>No Idiots Allowed Here</h1></a>
+      <p class="lead">
+       Are you an idiot? 
+      </p>
+    </div>
 
-    
-    <a class="subscribe-button icon-feed" href="https://chihkaiyu.github.io/index.xml">Subscribe</a>
-    
-</div>
-<span class="nav-cover"></span>
+    <nav>
+      <ul class="sidebar-nav">
+        <li><a href="https://chihkaiyu.github.io">Home</a> </li>
+        <li><a href="https://chihkaiyu.github.io/page/about"> About </a></li><li><a href="https://chihkaiyu.github.io/post"> Archives </a></li><li><a href="https://chihkaiyu.github.io/page/tags"> Tags </a></li>
+      </ul>
+    </nav>
 
+    <p>&copy; 2020. All rights reserved. </p>
+  </div>
+</aside>
 
- <div class="site-wrapper">
-
-
-
-  
-  <header class="main-header post-head" style="background-image: url(/content/images/2018/05/DSC03682.jpg)">
-  
-  <nav class="main-nav overlay clearfix">
-
-
-  
-      <a class="blog-logo" href="https://chihkaiyu.github.io"><img src="https://chihkaiyu.github.io/images/profile.png" alt="Home" /></a>
-  
-  
-      <a class="menu-button" href="#"><span class="burger">&#9776;</span><span class="word">Menu</span></a>
-  
-  </nav>
-</header>
-
-
-
-<main class="content" role="main">
-
-
-
-
-  <article class="post post">
-
-    <header class="post-header">
-        <h1 class="post-title">How to Install Ghost with Nginx and MySQL</h1>
-        <small></small>
-
-        <section class="post-meta">
-        
-          <time class="post-date" datetime="2018-05-19T23:33:58&#43;08:00">
-            May 19, 2018
-          </time>
-        
-         
-          <span class="post-tag small"><a href="https://chihkaiyu.github.io/tags/docker/">#docker</a></span>
-         
-        </section>
-    </header>
-
-    <section class="post-content">
-      
-
-<p>This article will show you how to install and configure <a href="https://ghost.org/">Ghost</a> with <a href="https://www.nginx.com/">Nginx</a> and <a href="https://www.mysql.com/">MySQL</a>.
+    <main class="content container">
+    <div class="post">
+  <h1>How to Install Ghost with Nginx and MySQL</h1>
+  <time datetime=2018-05-19T23:33:58&#43;0800 class="post-date">Sat, May 19, 2018</time>
+  <p>This article will show you how to install and configure <a href="https://ghost.org/">Ghost</a> with <a href="https://www.nginx.com/">Nginx</a> and <a href="https://www.mysql.com/">MySQL</a>.
 In fact, it is that how this blog has been built.
-This article contains:
-- <a href="#prerequisite">Prerequisite</a>
-- <a href="#environment">Environment</a>
-- <a href="#ghost">Ghost configuration</a>
-- <a href="#nginx">Nginx configuration</a>
-- <a href="#mysql">MySQL configuration</a>
-- <a href="#docker-compose">Docker Compose</a>
-- <a href="#summary">Summary</a></p>
-
-<p><a name="prerequisite"></a></p>
-
+This article contains:</p>
+<ul>
+<li><a href="#prerequisite">Prerequisite</a></li>
+<li><a href="#environment">Environment</a></li>
+<li><a href="#ghost">Ghost configuration</a></li>
+<li><a href="#nginx">Nginx configuration</a></li>
+<li><a href="#mysql">MySQL configuration</a></li>
+<li><a href="#docker-compose">Docker Compose</a></li>
+<li><a href="#summary">Summary</a></li>
+</ul>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
 <h1 id="prerequisite">Prerequisite</h1>
-
 <p>I use <a href="https://www.docker.com/">Docker</a> for handling my environment information and I suppose you have the basic knowledge about Docker and Docker Compose.
 Before you continue, you must ensure both of Docker and <a href="https://docs.docker.com/compose/overview/">Docker Compose</a> have been installed on your machine.
-Here are official guide to install them:
-- <a href="https://docs.docker.com/install/#cloud">Docker installation guide</a>
-- <a href="https://docs.docker.com/compose/install/">Docker Compose installation guide</a></p>
-
-<p><a name="environment"></a></p>
-
+Here are official guide to install them:</p>
+<ul>
+<li><a href="https://docs.docker.com/install/#cloud">Docker installation guide</a></li>
+<li><a href="https://docs.docker.com/compose/install/">Docker Compose installation guide</a></li>
+</ul>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
 <h1 id="environment">Environment</h1>
-
-<p>Here is my environment information:
-- OS: <code>Ubuntu 16.04.2 LTS</code>
-- Docker version: <code>17.04.0-ce</code>
-- Docker Compose version: <code>1.10.1</code></p>
-
+<p>Here is my environment information:</p>
+<ul>
+<li>OS: <code>Ubuntu 16.04.2 LTS</code></li>
+<li>Docker version: <code>17.04.0-ce</code></li>
+<li>Docker Compose version: <code>1.10.1</code></li>
+</ul>
 <p>The image version of other components will be introduced below.</p>
-
-<p><a name="ghost"></a></p>
-
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
 <h1 id="ghost-configuration">Ghost Configuration</h1>
-
 <p>Since we run Ghost in Docker container, the best way to configure it is via environment variables. You&rsquo;ll have to <a href="https://docs.ghost.org/docs/config#section-running-ghost-with-config-env-variables">insert two underscores</a> for nested configurations. You can see the examples below.
 You can also generate the configuration file in json format. Read the <a href="https://docs.ghost.org/docs/config">official documents</a> for more information.
 Here is my Ghost configuration in <code>docker-compose.yml</code>:</p>
-
 <pre><code>environment:
   url: https://blog.kaiyu.site
   admin__url: https://blog.kaiyu.site
@@ -295,18 +96,13 @@ Here is my Ghost configuration in <code>docker-compose.yml</code>:</p>
   database__connection__user: {USER}
   database__connection__password: {PASSWORD}
   database__connection__database: {DATABASE}
-</code></pre>
-
-<p><a name="nginx"></a></p>
-
+</code></pre><p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
 <h1 id="nginx-configuration">Nginx Configuration</h1>
-
 <p>I use Nginx as a reverse proxy for easier configuring HTTP behavior like cache period or SSL settings.
 The reason I want to configure HTTP server is that I want to install SSL certificate and it&rsquo;s very easy via Nginx.
 I apply SSL certificate on <a href="https://www.sslforfree.com/">SSL For Free</a> and it&rsquo;s totally free but the problem is that you&rsquo;ll have to renew your certificate every 3 months.
 I purchased my domain on <a href="https://www.godaddy.com/">GoDaddy</a>.
 Here is my Nginx configuration in <code>nginx/blog.conf</code>:</p>
-
 <pre><code>server {  
   listen              80;
   server_name         blog.kaiyu.site;
@@ -348,40 +144,32 @@ server {
     proxy_pass                            http://ghost:2368;
   }
 }
-</code></pre>
-
-<p><a name="mysql"></a></p>
-
+</code></pre><p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
 <h1 id="mysql-configuration">MySQL Configuration</h1>
-
 <p>I&rsquo;d only set up the password of root, database, user, the password of user via environment variables.
 The initialization is all done via Ghost.
 Here is my MySQL configuration in <code>docker-compose.yml</code>:</p>
-
 <pre><code>environment:
   MYSQL_ROOT_PASSWORD: {ROOT-PASSWORD}
   MYSQL_DATABASE: {DATABASE}
   MYSQL_USER: {USER}
   MYSQL_PASSWORD: {PASSWORD}
-</code></pre>
-
-<p><a name="docker-compose"></a></p>
-
+</code></pre><p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
 <h1 id="docker-compose">Docker Compose</h1>
-
 <p>Finally you can sum up everything in <code>docker-compose.yml</code> and spin them up via a single command: <code>docker-compose up -d</code>.
-The Docker image tag of component I&rsquo;ve used are:
-- Ghost: <code>1.22.7-alpine</code>
-- Nginx: <code>1.13.12-alpine</code>
-- MySQL: <code>5.7.22</code></p>
-
+The Docker image tag of component I&rsquo;ve used are:</p>
+<ul>
+<li>Ghost: <code>1.22.7-alpine</code></li>
+<li>Nginx: <code>1.13.12-alpine</code></li>
+<li>MySQL: <code>5.7.22</code></li>
+</ul>
 <p>The important thing is persisting your data by simply mounting the data outside to the host.
-Here are the locations of every component&rsquo;s data:
-- Ghost: <code>/var/lib/ghost/content</code>
-- MySQL: <code>/var/lib/mysql</code></p>
-
+Here are the locations of every component&rsquo;s data:</p>
+<ul>
+<li>Ghost: <code>/var/lib/ghost/content</code></li>
+<li>MySQL: <code>/var/lib/mysql</code></li>
+</ul>
 <p>Here is my <code>docker-compose.yml</code>:</p>
-
 <pre><code>version: '2.1'
 
 services:
@@ -426,133 +214,39 @@ services:
     volumes:
       - $PWD/mysql:/var/lib/mysql
 
-</code></pre>
-
-<p><a name="#summary"></a></p>
-
+</code></pre><p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
 <h1 id="summary">Summary</h1>
-
 <p>In this article, you have learned how to install Ghost with Nginx and MySQL.
 All these things can be done very easily via Docker.
 With Docker, the environment is not a problem nowadays but you&rsquo;ll still need to figure out how to configure every component.</p>
 
-    </section>
+</div>
 
-
-  <footer class="post-footer">
-
-
-    
-
-
-
-
-
-
-
-
-<figure class="author-image">
-    <a class="img" href="https://chihkaiyu.github.io" style="background-image: url(/images/profile.png)"><span class="hidden">Chih Kai Yu's Picture</span></a>
-</figure>
-
-
-<section class="author">
-  <h4><a href="https://chihkaiyu.github.io">Chih Kai Yu</a></h4>
-  
-  <p>Software Engineer</p>
-  
-  <div class="author-meta">
-    <span class="author-location icon-location">Taipei, Taiwan</span>
-    <span class="author-link icon-link"><a href="https://chihkaiyu.github.io">https://chihkaiyu.github.io</a></span>
-  </div>
-</section>
-
-
-
-
-    
-<section class="share">
-  <h4>Share this post</h4>
-  <a class="icon-twitter" style="font-size: 1.4em" href="https://twitter.com/share?text=How%20to%20Install%20Ghost%20with%20Nginx%20and%20MySQL&nbsp;-&nbsp;No%20Idiots%20Allowed%20Here&amp;url=https%3a%2f%2fchihkaiyu.github.io%2fpost%2fhow-to-set-up-ghost-site-with-https%2f"
-      onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
-      <span class="hidden">Twitter</span>
-  </a>
-  <a class="icon-facebook" style="font-size: 1.4em" href="https://www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fchihkaiyu.github.io%2fpost%2fhow-to-set-up-ghost-site-with-https%2f"
-      onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
-      <span class="hidden">Facebook</span>
-  </a>
-  <a class="icon-pinterest" style="font-size: 1.4em" href="http://pinterest.com/pin/create/button/?url=https%3a%2f%2fchihkaiyu.github.io%2fpost%2fhow-to-set-up-ghost-site-with-https%2f&amp;description=How%20to%20Install%20Ghost%20with%20Nginx%20and%20MySQL"
-      onclick="window.open(this.href, 'pinterest-share','width=580,height=296');return false;">
-      <span class="hidden">Pinterest</span>
-  </a>
-  <a class="icon-google-plus" style="font-size: 1.4em" href="https://plus.google.com/share?url=https%3a%2f%2fchihkaiyu.github.io%2fpost%2fhow-to-set-up-ghost-site-with-https%2f"
-     onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
-      <span class="hidden">Google+</span>
-  </a>
-</section>
-
-
-
-    
-
+<h2>Comments</h2>
 <div id="disqus_thread"></div>
-<script>
-
-
-
-
-var disqus_config = function () {
-this.page.url = "https:\/\/chihkaiyu.github.io\/post\/how-to-set-up-ghost-site-with-https\/";  
-this.page.identifier = "https:\/\/chihkaiyu.github.io\/post\/how-to-set-up-ghost-site-with-https\/"; 
-};
-
-(function() { 
-var d = document, s = d.createElement('script');
-s.src = 'https://chihkaiyu.disqus.com/embed.js';
-s.setAttribute('data-timestamp', +new Date());
-(d.head || d.body).appendChild(s);
-})();
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "chihkaiyu" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
 </script>
 <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    </main>
 
-
-
-
-
-
-
-
-  </footer>
-</article>
-
-</main>
-
-
-  <aside class="read-next">
-  
-      <a class="read-next-story" style="background-image: url(/content/images/2018/06/DSC03526.jpg)" href="https://chihkaiyu.github.io/post/migrate-sameersbn-docker-gitlab-to-gitlab-gitlab-ce/">
-          <section class="post">
-              <h2>Migrate sameersbn/docker-gitlab to gitlab/gitlab-ce</h2>
-              
-          </section>
-      </a>
-  
-  
-</aside>
-
-
-
-    <footer class="site-footer clearfix">
-        <section class="copyright"><a href="">No Idiots Allowed Here</a> </section>
-        
-        <section class="poweredby">Proudly generated by <a class="icon-hugo" href="http://gohugo.io">HUGO</a>, with <a class="icon-theme" href="https://github.com/vjeantet/hugo-theme-casper">Casper</a> theme</section>
-        
-    </footer>
-    </div>
-    <script type="text/javascript" src="https://chihkaiyu.github.io/js/jquery.js"></script>
-    <script type="text/javascript" src="https://chihkaiyu.github.io/js/jquery.fitvids.js"></script>
-    <script type="text/javascript" src="https://chihkaiyu.github.io/js/index.js"></script>
     
-</body>
+      
+    
+  </body>
 </html>
-

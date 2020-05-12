@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Pages on No Idiots Allowed Here</title>
@@ -19,8 +19,7 @@
       <guid>https://chihkaiyu.github.io/page/about/</guid>
       <description>I&amp;rsquo;m a Taiwanese so there will be some Chinese articles if I don&amp;rsquo;t know how to properly express them in English. Feel free to leave message or email me via kai.chihkaiyu[at]gmail.com.
 Here are some skill keywords I have:
- Environment
- Linux Docker  Language  Python Golang  Services:  MySQL Kafka GitLab GitLab CI Prometheus Jenkins Elasticsearch OpenTSDB   </description>
+ Environment  Linux Docker   Language  Python Golang   Services:  MySQL Kafka GitLab GitLab CI Prometheus Jenkins Elasticsearch OpenTSDB    </description>
     </item>
     
     <item>
